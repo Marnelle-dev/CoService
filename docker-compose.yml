@@ -19,8 +19,8 @@ services:
       - Consul__ServiceId=coservice-1
       - Consul__ServiceAddress=http://coservice:8700
       - Consul__HealthCheck__Endpoint=/sante
-      - Consul__HealthCheck__Interval=10s
-      - Consul__HealthCheck__Timeout=5s
+      - Consul__HealthCheck__Interval=10
+      - Consul__HealthCheck__Timeout=5
     restart: unless-stopped
     networks:
       - coservice-network
