@@ -1,0 +1,131 @@
+using AutoMapper;
+using COService.Application.DTOs;
+using COService.Application.Repositories;
+using COService.Domain.Entities;
+using COService.Domain.Enums;
+
+namespace COService.Application.Services;
+
+/// <summary>
+/// Service pour la gestion des certificats d'origine
+/// </summary>
+public class CertificatOrigineService : ICertificatOrigineService
+{
+    private readonly ICertificatOrigineRepository _repository;
+    private readonly ICertificateLineRepository _lineRepository;
+    private readonly IMapper _mapper;
+    private readonly IUnitOfWork _unitOfWork;
+
+    public CertificatOrigineService(
+        ICertificatOrigineRepository repository,
+        ICertificateLineRepository lineRepository,
+        IMapper mapper,
+        IUnitOfWork unitOfWork)
+    {
+        _repository = repository;
+        _lineRepository = lineRepository;
+        _mapper = mapper;
+        _unitOfWork = unitOfWork;
+    }
+
+    public async Task<CertificatOrigineDto> CreerCertificatAsync(CreerCertificatOrigineDto dto, string? utilisateur = null, CancellationToken cancellationToken = default)
+    {
+        // Vérifier si le numéro de certificat existe déjà
+        if (await _repository.ExistsAsync(dto.CertificateNo, cancellationToken))
+        {
+            throw new InvalidOperationException($"Un certificat avec le numéro {dto.CertificateNo} existe déjà.");
+        }
+
+        var certificat = _mapper.Map<CertificatOrigine>(dto);
+        certificat.CreePar = utilisateur;
+
+        // Créer les lignes si fournies
+        if (dto.CertificateLines.Any())
+        {
+            foreach (var ligneDto in dto.CertificateLines)
+            {
+                var ligne = _mapper.Map<CertificateLine>(ligneDto);
+                ligne.CertificateId = certificat.Id;
+                ligne.CreePar = utilisateur;
+                certificat.CertificateLines.Add(ligne);
+            }
+        }
+
+        await _repository.AddAsync(certificat, cancellationToken);
+        await _unitOfWork.SaveChangesAsync(cancellationToken);
+
+        return _mapper.Map<CertificatOrigineDto>(certificat);
+    }
+
+    public async Task<IEnumerable<CertificatOrigineDto>> GetAllCertificatsAsync(CancellationToken cancellationToken = default)
+    {
+        var certificats = await _repository.GetAllAsync(cancellationToken);
+        return _mapper.Map<IEnumerable<CertificatOrigineDto>>(certificats);
+    }
+
+    public async Task<CertificatOrigineDto?> GetCertificatByIdAsync(Guid id, CancellationToken cancellationToken = default)
+    {
+        var certificat = await _repository.GetByIdAsync(id, cancellationToken);
+        return certificat == null ? null : _mapper.Map<CertificatOrigineDto>(certificat);
+    }
+
+    public async Task<CertificatOrigineDto?> GetCertificatByNoAsync(string certificateNo, CancellationToken cancellationToken = default)
+    {
+        var certificat = await _repository.GetByCertificateNoAsync(certificateNo, cancellationToken);
+        return certificat == null ? null : _mapper.Map<CertificatOrigineDto>(certificat);
+    }
+
+    public async Task<CertificatOrigineDto> ModifierCertificatAsync(Guid id, ModifierCertificatOrigineDto dto, string? utilisateur = null, CancellationToken cancellationToken = default)
+    {
+        var certificat = await _repository.GetByIdAsync(id, cancellationToken);
+        if (certificat == null)
+        {
+            throw new KeyNotFoundException($"Certificat avec l'ID {id} introuvable.");
+        }
+
+        _mapper.Map(dto, certificat);
+        certificat.ModifiePar = utilisateur;
+        certificat.ModifierLe = DateTime.UtcNow;
+
+        _repository.Update(certificat);
+        await _unitOfWork.SaveChangesAsync(cancellationToken);
+
+        return _mapper.Map<CertificatOrigineDto>(certificat);
+    }
+
+    public async Task SupprimerCertificatAsync(Guid id, CancellationToken cancellationToken = default)
+    {
+        var certificat = await _repository.GetByIdAsync(id, cancellationToken);
+        if (certificat == null)
+        {
+            throw new KeyNotFoundException($"Certificat avec l'ID {id} introuvable.");
+        }
+
+        _repository.Remove(certificat);
+        await _unitOfWork.SaveChangesAsync(cancellationToken);
+    }
+
+    public async Task<IEnumerable<CertificatOrigineDto>> GetCertificatsByExportateurAsync(string exportateur, CancellationToken cancellationToken = default)
+    {
+        var certificats = await _repository.GetByExportateurAsync(exportateur, cancellationToken);
+        return _mapper.Map<IEnumerable<CertificatOrigineDto>>(certificats);
+    }
+
+    public async Task<IEnumerable<CertificatOrigineDto>> GetCertificatsByStatutAsync(string statut, CancellationToken cancellationToken = default)
+    {
+        if (!Enum.TryParse<StatutCertificat>(statut, true, out var statutEnum))
+        {
+            throw new ArgumentException($"Statut invalide : {statut}");
+        }
+
+        var certificats = await _repository.GetByStatutAsync(statutEnum, cancellationToken);
+        return _mapper.Map<IEnumerable<CertificatOrigineDto>>(certificats);
+    }
+
+    public async Task<IEnumerable<CertificatOrigineDto>> GetCertificatsByPaysDestinationAsync(string paysDestination, CancellationToken cancellationToken = default)
+    {
+        var certificats = await _repository.GetByPaysDestinationAsync(paysDestination, cancellationToken);
+        return _mapper.Map<IEnumerable<CertificatOrigineDto>>(certificats);
+    }
+}
+
