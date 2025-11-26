@@ -8,7 +8,7 @@ public static class HealthEndpoints
     public static void MapHealthEndpoints(this WebApplication app)
     {
         var group = app.MapGroup("/sante")
-            .WithTags("Santé");
+            .ExcludeFromDescription(); // Exclut de Swagger
 
         // Vérification de santé simple
         group.MapGet("/", () => Results.Ok(new
