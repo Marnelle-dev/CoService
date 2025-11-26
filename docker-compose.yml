@@ -1,0 +1,37 @@
+version: '3.8'
+
+services:
+  coservice:
+    image: coservice:latest
+    container_name: coservice
+    build:
+      context: .
+      dockerfile: Dockerfile
+    ports:
+      - "8700:8700"
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Production
+      - ASPNETCORE_URLS=http://+:8700
+      - ConnectionStrings__chaine=${DB_CONNECTION_STRING}
+      - Consul__Enabled=${CONSUL_ENABLED:-false}
+      - Consul__Address=${CONSUL_ADDRESS:-http://srv-guot-cont.gumar.local:8500}
+      - Consul__ServiceName=coservice
+      - Consul__ServiceId=coservice-1
+      - Consul__ServiceAddress=http://coservice:8700
+      - Consul__HealthCheck__Endpoint=/sante
+      - Consul__HealthCheck__Interval=10s
+      - Consul__HealthCheck__Timeout=5s
+    restart: unless-stopped
+    networks:
+      - coservice-network
+    healthcheck:
+      test: ["CMD-SHELL", "wget --no-verbose --tries=1 --spider http://localhost:8700/sante || exit 1"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 40s
+
+networks:
+  coservice-network:
+    driver: bridge
+
