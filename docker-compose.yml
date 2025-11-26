@@ -17,7 +17,7 @@ services:
       - Consul__Address=${CONSUL_ADDRESS:-http://srv-guot-cont.gumar.local:8500}
       - Consul__ServiceName=coservice
       - Consul__ServiceId=coservice-1
-      - Consul__ServiceAddress=http://coservice:8700
+      - Consul__ServiceAddress=${CONSUL_SERVICE_ADDRESS:-http://srv-guot-cont.gumar.local:8700}
       - Consul__HealthCheck__Endpoint=/sante
       - Consul__HealthCheck__Interval=10
       - Consul__HealthCheck__Timeout=5
