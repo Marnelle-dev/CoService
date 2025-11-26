@@ -19,7 +19,7 @@ builder.Services.AddSwaggerGen();
 // Configuration Entity Framework Core
 builder.Services.AddDbContext<COServiceDbContext>(options =>
 {
-    var connectionString = builder.Configuration.GetConnectionString("DefaultConnection");
+    var connectionString = builder.Configuration.GetConnectionString("chaine");
     options.UseSqlServer(connectionString, sqlOptions =>
     {
         sqlOptions.EnableRetryOnFailure(
