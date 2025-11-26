@@ -68,15 +68,13 @@ builder.Services.AddScoped<ICertificateTypeService, CertificateTypeService>();
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
-if (app.Environment.IsDevelopment())
+// Swagger activé en Development et Production
+app.UseSwagger();
+app.UseSwaggerUI(c =>
 {
-    app.UseSwagger();
-    app.UseSwaggerUI(c =>
-    {
-        c.SwaggerEndpoint("/swagger/v1/swagger.json", "COService API v1");
-        c.RoutePrefix = "swagger"; // Swagger UI à /swagger
-    });
-}
+    c.SwaggerEndpoint("/swagger/v1/swagger.json", "COService API v1");
+    c.RoutePrefix = "swagger"; // Swagger UI à /swagger
+});
 
 // Middleware de gestion d'erreur
 app.UseExceptionHandler(options =>
