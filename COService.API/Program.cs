@@ -76,6 +76,9 @@ app.UseSwaggerUI(c =>
     c.RoutePrefix = "swagger"; // Swagger UI à /swagger
 });
 
+// Redirection de la racine vers Swagger
+app.MapGet("/", () => Results.Redirect("/swagger"));
+
 // Middleware de gestion d'erreur
 app.UseExceptionHandler(options =>
 {
