@@ -2,7 +2,6 @@ using AutoMapper;
 using COService.Application.DTOs;
 using COService.Application.Repositories;
 using COService.Domain.Entities;
-using COService.Domain.Enums;
 
 namespace COService.Application.Services;
 
@@ -111,14 +110,15 @@ public class CertificatOrigineService : ICertificatOrigineService
         return _mapper.Map<IEnumerable<CertificatOrigineDto>>(certificats);
     }
 
-    public async Task<IEnumerable<CertificatOrigineDto>> GetCertificatsByStatutAsync(string statut, CancellationToken cancellationToken = default)
+    public async Task<IEnumerable<CertificatOrigineDto>> GetCertificatsByStatutAsync(string statutNom, CancellationToken cancellationToken = default)
     {
-        if (!Enum.TryParse<StatutCertificat>(statut, true, out var statutEnum))
-        {
-            throw new ArgumentException($"Statut invalide : {statut}");
-        }
+        var certificats = await _repository.GetByStatutNomAsync(statutNom, cancellationToken);
+        return _mapper.Map<IEnumerable<CertificatOrigineDto>>(certificats);
+    }
 
-        var certificats = await _repository.GetByStatutAsync(statutEnum, cancellationToken);
+    public async Task<IEnumerable<CertificatOrigineDto>> GetCertificatsByStatutIdAsync(Guid statutCertificatId, CancellationToken cancellationToken = default)
+    {
+        var certificats = await _repository.GetByStatutAsync(statutCertificatId, cancellationToken);
         return _mapper.Map<IEnumerable<CertificatOrigineDto>>(certificats);
     }
 

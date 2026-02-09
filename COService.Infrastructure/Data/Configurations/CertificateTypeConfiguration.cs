@@ -8,7 +8,7 @@ public class CertificateTypeConfiguration : IEntityTypeConfiguration<Certificate
 {
     public void Configure(EntityTypeBuilder<CertificateType> builder)
     {
-        builder.ToTable("certificate_types");
+        builder.ToTable("TypesCertificats");
 
         builder.HasKey(ct => ct.Id);
 
@@ -52,7 +52,7 @@ public class CertificateTypeConfiguration : IEntityTypeConfiguration<Certificate
         // Index unique sur le code
         builder.HasIndex(ct => ct.Code)
             .IsUnique()
-            .HasDatabaseName("IX_certificate_types_code");
+            .HasDatabaseName("IX_TypesCertificats_code");
     }
 }
 

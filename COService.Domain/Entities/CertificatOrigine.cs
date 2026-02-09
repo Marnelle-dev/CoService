@@ -18,29 +18,54 @@ public class CertificatOrigine
     public string CertificateNo { get; set; } = string.Empty;
 
     /// <summary>
-    /// Nom de l'exportateur
+    /// Référence à l'exportateur
     /// </summary>
-    public string Exportateur { get; set; } = string.Empty;
+    public Guid? ExportateurId { get; set; }
+
+    /// <summary>
+    /// Exportateur
+    /// </summary>
+    public Exportateur? Exportateur { get; set; }
+
+    /// <summary>
+    /// Référence au partenaire/CCI
+    /// </summary>
+    public Guid? PartenaireId { get; set; }
 
     /// <summary>
     /// Partenaire/CCI
     /// </summary>
-    public string? Partenaire { get; set; }
+    public Partenaire? Partenaire { get; set; }
+
+    /// <summary>
+    /// Référence au pays de destination
+    /// </summary>
+    public Guid? PaysDestinationId { get; set; }
 
     /// <summary>
     /// Pays de destination
     /// </summary>
-    public string? PaysDestination { get; set; }
+    public Pays? PaysDestination { get; set; }
+
+    /// <summary>
+    /// Référence au port de sortie
+    /// </summary>
+    public Guid? PortSortieId { get; set; }
 
     /// <summary>
     /// Port de sortie
     /// </summary>
-    public string? PortSortie { get; set; }
+    public Port? PortSortie { get; set; }
+
+    /// <summary>
+    /// Référence au port côté Congo
+    /// </summary>
+    public Guid? PortCongoId { get; set; }
 
     /// <summary>
     /// Port côté Congo
     /// </summary>
-    public string? PortCongo { get; set; }
+    public Port? PortCongo { get; set; }
 
     /// <summary>
     /// Référence au type de certificat
@@ -63,9 +88,14 @@ public class CertificatOrigine
     public string? Mandataire { get; set; }
 
     /// <summary>
-    /// Statut du dossier
+    /// Référence au statut du certificat
     /// </summary>
-    public StatutCertificat Statut { get; set; }
+    public Guid? StatutCertificatId { get; set; }
+
+    /// <summary>
+    /// Statut du certificat
+    /// </summary>
+    public StatutCertificat? StatutCertificat { get; set; }
 
     /// <summary>
     /// Observation interne
@@ -73,19 +103,14 @@ public class CertificatOrigine
     public string? Observation { get; set; }
 
     /// <summary>
-    /// Nom du destinataire des produits
+    /// Référence au destinataire (carnet d'adresses)
     /// </summary>
-    public string? ProductsRecipientName { get; set; }
+    public Guid? CarnetAdresseId { get; set; }
 
     /// <summary>
-    /// Adresse du destinataire (ligne 1)
+    /// Destinataire (carnet d'adresses)
     /// </summary>
-    public string? ProductsRecipientAddress1 { get; set; }
-
-    /// <summary>
-    /// Adresse du destinataire (ligne 2)
-    /// </summary>
-    public string? ProductsRecipientAddress2 { get; set; }
+    public CarnetAdresse? CarnetAdresse { get; set; }
 
     /// <summary>
     /// Nom du navire
@@ -143,5 +168,45 @@ public class CertificatOrigine
     /// Abonnement auquel ce certificat est rattaché
     /// </summary>
     public Abonnement? Abonnement { get; set; }
+
+    /// <summary>
+    /// Référence à la zone de production
+    /// </summary>
+    public Guid? ZoneProductionId { get; set; }
+
+    /// <summary>
+    /// Zone de production
+    /// </summary>
+    public ZoneProduction? ZoneProduction { get; set; }
+
+    /// <summary>
+    /// Référence au bureau de douane
+    /// </summary>
+    public Guid? BureauDedouanementId { get; set; }
+
+    /// <summary>
+    /// Bureau de douane
+    /// </summary>
+    public BureauDedouanement? BureauDedouanement { get; set; }
+
+    /// <summary>
+    /// Référence au module de transport
+    /// </summary>
+    public Guid? ModuleId { get; set; }
+
+    /// <summary>
+    /// Module de transport
+    /// </summary>
+    public Module? Module { get; set; }
+
+    /// <summary>
+    /// Référence à la devise
+    /// </summary>
+    public Guid? DeviseId { get; set; }
+
+    /// <summary>
+    /// Devise
+    /// </summary>
+    public Devise? Devise { get; set; }
 }
 

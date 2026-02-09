@@ -11,8 +11,11 @@ public interface ICertificatOrigineRepository
     Task<CertificatOrigine?> GetByCertificateNoAsync(string certificateNo, CancellationToken cancellationToken = default);
     Task<IEnumerable<CertificatOrigine>> GetAllAsync(CancellationToken cancellationToken = default);
     Task<IEnumerable<CertificatOrigine>> GetByExportateurAsync(string exportateur, CancellationToken cancellationToken = default);
-    Task<IEnumerable<CertificatOrigine>> GetByStatutAsync(Domain.Enums.StatutCertificat statut, CancellationToken cancellationToken = default);
+    Task<IEnumerable<CertificatOrigine>> GetByExportateurIdAsync(Guid exportateurId, CancellationToken cancellationToken = default);
+    Task<IEnumerable<CertificatOrigine>> GetByStatutAsync(Guid statutCertificatId, CancellationToken cancellationToken = default);
+    Task<IEnumerable<CertificatOrigine>> GetByStatutNomAsync(string statutNom, CancellationToken cancellationToken = default);
     Task<IEnumerable<CertificatOrigine>> GetByPaysDestinationAsync(string paysDestination, CancellationToken cancellationToken = default);
+    Task<IEnumerable<CertificatOrigine>> GetByPaysDestinationIdAsync(Guid paysDestinationId, CancellationToken cancellationToken = default);
     Task<CertificatOrigine> AddAsync(CertificatOrigine certificat, CancellationToken cancellationToken = default);
     void Update(CertificatOrigine certificat);
     void Remove(CertificatOrigine certificat);

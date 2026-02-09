@@ -92,7 +92,226 @@ namespace COService.Infrastructure.Migrations
                         .IsUnique()
                         .HasFilter("[certificate_id] IS NOT NULL");
 
-                    b.ToTable("abonnements", (string)null);
+                    b.ToTable("Abonnements", (string)null);
+                });
+
+            modelBuilder.Entity("COService.Domain.Entities.Aeroport", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier")
+                        .HasColumnName("id");
+
+                    b.Property<bool>("Actif")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("bit")
+                        .HasDefaultValue(true)
+                        .HasColumnName("Actif");
+
+                    b.Property<string>("Code")
+                        .IsRequired()
+                        .HasMaxLength(10)
+                        .HasColumnType("nvarchar(10)")
+                        .HasColumnName("Code");
+
+                    b.Property<DateTime?>("CreeLe")
+                        .HasColumnType("datetime2(7)")
+                        .HasColumnName("CreeLe");
+
+                    b.Property<string>("CreePar")
+                        .HasColumnType("nvarchar(max)")
+                        .HasColumnName("CreePar");
+
+                    b.Property<string>("ModifiePar")
+                        .HasColumnType("nvarchar(max)")
+                        .HasColumnName("ModifiePar");
+
+                    b.Property<DateTime?>("ModifierLe")
+                        .HasColumnType("datetime2(7)")
+                        .HasColumnName("ModifierLe");
+
+                    b.Property<string>("Nom")
+                        .IsRequired()
+                        .HasMaxLength(255)
+                        .HasColumnType("nvarchar(255)")
+                        .HasColumnName("Nom");
+
+                    b.Property<Guid?>("PaysId")
+                        .HasColumnType("uniqueidentifier")
+                        .HasColumnName("PaysId");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("Code")
+                        .IsUnique()
+                        .HasDatabaseName("IX_Aeroports_Code");
+
+                    b.HasIndex("PaysId");
+
+                    b.ToTable("Aeroports", (string)null);
+                });
+
+            modelBuilder.Entity("COService.Domain.Entities.BureauDedouanement", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier")
+                        .HasColumnName("id");
+
+                    b.Property<bool>("Actif")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("bit")
+                        .HasDefaultValue(true)
+                        .HasColumnName("Actif");
+
+                    b.Property<string>("Code")
+                        .IsRequired()
+                        .HasMaxLength(10)
+                        .HasColumnType("nvarchar(10)")
+                        .HasColumnName("Code");
+
+                    b.Property<DateTime?>("CreeLe")
+                        .HasColumnType("datetime2(7)")
+                        .HasColumnName("CreeLe");
+
+                    b.Property<string>("CreePar")
+                        .HasColumnType("nvarchar(max)")
+                        .HasColumnName("CreePar");
+
+                    b.Property<string>("Description")
+                        .IsRequired()
+                        .HasMaxLength(255)
+                        .HasColumnType("nvarchar(255)")
+                        .HasColumnName("Description");
+
+                    b.Property<string>("ModifiePar")
+                        .HasColumnType("nvarchar(max)")
+                        .HasColumnName("ModifiePar");
+
+                    b.Property<DateTime?>("ModifierLe")
+                        .HasColumnType("datetime2(7)")
+                        .HasColumnName("ModifierLe");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("Code")
+                        .IsUnique()
+                        .HasDatabaseName("IX_BureauxDedouanements_Code");
+
+                    b.ToTable("BureauxDedouanements", (string)null);
+                });
+
+            modelBuilder.Entity("COService.Domain.Entities.CarnetAdresse", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier")
+                        .HasColumnName("id");
+
+                    b.Property<string>("Adresse")
+                        .HasMaxLength(500)
+                        .HasColumnType("nvarchar(500)")
+                        .HasColumnName("Adresse");
+
+                    b.Property<string>("Coordonnees")
+                        .HasMaxLength(255)
+                        .HasColumnType("nvarchar(255)")
+                        .HasColumnName("Coordonnees");
+
+                    b.Property<DateTime?>("CreeLe")
+                        .HasColumnType("datetime2(7)")
+                        .HasColumnName("CreeLe");
+
+                    b.Property<string>("CreePar")
+                        .HasColumnType("nvarchar(max)")
+                        .HasColumnName("CreePar");
+
+                    b.Property<string>("ModifiePar")
+                        .HasColumnType("nvarchar(max)")
+                        .HasColumnName("ModifiePar");
+
+                    b.Property<DateTime?>("ModifierLe")
+                        .HasColumnType("datetime2(7)")
+                        .HasColumnName("ModifierLe");
+
+                    b.Property<string>("Nom")
+                        .IsRequired()
+                        .HasMaxLength(255)
+                        .HasColumnType("nvarchar(255)")
+                        .HasColumnName("Nom");
+
+                    b.Property<string>("RaisonSociale")
+                        .HasMaxLength(255)
+                        .HasColumnType("nvarchar(255)")
+                        .HasColumnName("RaisonSociale");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("Nom")
+                        .HasDatabaseName("IX_CarnetsAdresses_Nom");
+
+                    b.ToTable("CarnetsAdresses", (string)null);
+                });
+
+            modelBuilder.Entity("COService.Domain.Entities.CategorieTarifaire", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier")
+                        .HasColumnName("id");
+
+                    b.Property<bool>("Actif")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("bit")
+                        .HasDefaultValue(true)
+                        .HasColumnName("Actif");
+
+                    b.Property<string>("Code")
+                        .IsRequired()
+                        .HasMaxLength(10)
+                        .HasColumnType("nvarchar(10)")
+                        .HasColumnName("Code");
+
+                    b.Property<DateTime?>("CreeLe")
+                        .HasColumnType("datetime2(7)")
+                        .HasColumnName("CreeLe");
+
+                    b.Property<string>("CreePar")
+                        .HasColumnType("nvarchar(max)")
+                        .HasColumnName("CreePar");
+
+                    b.Property<string>("Description")
+                        .IsRequired()
+                        .HasMaxLength(255)
+                        .HasColumnType("nvarchar(255)")
+                        .HasColumnName("Description");
+
+                    b.Property<string>("DivisionCode")
+                        .HasMaxLength(10)
+                        .HasColumnType("nvarchar(10)")
+                        .HasColumnName("DivisionCode");
+
+                    b.Property<Guid?>("DivisionId")
+                        .HasColumnType("uniqueidentifier")
+                        .HasColumnName("DivisionId");
+
+                    b.Property<string>("ModifiePar")
+                        .HasColumnType("nvarchar(max)")
+                        .HasColumnName("ModifiePar");
+
+                    b.Property<DateTime?>("ModifierLe")
+                        .HasColumnType("datetime2(7)")
+                        .HasColumnName("ModifierLe");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("Code")
+                        .IsUnique()
+                        .HasDatabaseName("IX_CategoriesTariffaires_Code");
+
+                    b.HasIndex("DivisionId");
+
+                    b.ToTable("CategoriesTariffaires", (string)null);
                 });
 
             modelBuilder.Entity("COService.Domain.Entities.CertificatOrigine", b =>
@@ -105,6 +324,14 @@ namespace COService.Infrastructure.Migrations
                     b.Property<Guid?>("AbonnementId")
                         .HasColumnType("uniqueidentifier")
                         .HasColumnName("abonnement_id");
+
+                    b.Property<Guid?>("BureauDedouanementId")
+                        .HasColumnType("uniqueidentifier")
+                        .HasColumnName("BureauDedouanementId");
+
+                    b.Property<Guid?>("CarnetAdresseId")
+                        .HasColumnType("uniqueidentifier")
+                        .HasColumnName("CarnetAdresseId");
 
                     b.Property<string>("CertificateNo")
                         .IsRequired()
@@ -120,15 +347,17 @@ namespace COService.Infrastructure.Migrations
                         .HasColumnType("nvarchar(max)")
                         .HasColumnName("CreePar");
 
+                    b.Property<Guid?>("DeviseId")
+                        .HasColumnType("uniqueidentifier")
+                        .HasColumnName("DeviseId");
+
                     b.Property<Guid?>("DocumentsId")
                         .HasColumnType("uniqueidentifier")
                         .HasColumnName("documents_id");
 
-                    b.Property<string>("Exportateur")
-                        .IsRequired()
-                        .HasMaxLength(200)
-                        .HasColumnType("nvarchar(200)")
-                        .HasColumnName("Exportateur");
+                    b.Property<Guid?>("ExportateurId")
+                        .HasColumnType("uniqueidentifier")
+                        .HasColumnName("ExportateurId");
 
                     b.Property<string>("Formule")
                         .HasMaxLength(200)
@@ -148,6 +377,10 @@ namespace COService.Infrastructure.Migrations
                         .HasColumnType("datetime2(7)")
                         .HasColumnName("ModifierLe");
 
+                    b.Property<Guid?>("ModuleId")
+                        .HasColumnType("uniqueidentifier")
+                        .HasColumnName("ModuleId");
+
                     b.Property<string>("Navire")
                         .HasMaxLength(255)
                         .HasColumnType("nvarchar(255)")
@@ -157,65 +390,67 @@ namespace COService.Infrastructure.Migrations
                         .HasColumnType("nvarchar(max)")
                         .HasColumnName("Observation");
 
-                    b.Property<string>("Partenaire")
-                        .HasMaxLength(200)
-                        .HasColumnType("nvarchar(200)")
-                        .HasColumnName("Partenaire");
+                    b.Property<Guid?>("PartenaireId")
+                        .HasColumnType("uniqueidentifier")
+                        .HasColumnName("PartenaireId");
 
-                    b.Property<string>("PaysDestination")
-                        .HasMaxLength(200)
-                        .HasColumnType("nvarchar(200)")
-                        .HasColumnName("PaysDestination");
+                    b.Property<Guid?>("PaysDestinationId")
+                        .HasColumnType("uniqueidentifier")
+                        .HasColumnName("PaysDestinationId");
 
-                    b.Property<string>("PortCongo")
-                        .HasMaxLength(200)
-                        .HasColumnType("nvarchar(200)")
-                        .HasColumnName("PortCongo");
+                    b.Property<Guid?>("PortCongoId")
+                        .HasColumnType("uniqueidentifier")
+                        .HasColumnName("PortCongoId");
 
-                    b.Property<string>("PortSortie")
-                        .HasMaxLength(200)
-                        .HasColumnType("nvarchar(200)")
-                        .HasColumnName("PortSortie");
+                    b.Property<Guid?>("PortSortieId")
+                        .HasColumnType("uniqueidentifier")
+                        .HasColumnName("PortSortieId");
 
-                    b.Property<string>("ProductsRecipientAddress1")
-                        .HasMaxLength(255)
-                        .HasColumnType("nvarchar(255)")
-                        .HasColumnName("ProductsRecipientAddress1");
-
-                    b.Property<string>("ProductsRecipientAddress2")
-                        .HasMaxLength(255)
-                        .HasColumnType("nvarchar(255)")
-                        .HasColumnName("ProductsRecipientAddress2");
-
-                    b.Property<string>("ProductsRecipientName")
-                        .HasMaxLength(255)
-                        .HasColumnType("nvarchar(255)")
-                        .HasColumnName("ProductsRecipientName");
-
-                    b.Property<string>("Statut")
-                        .IsRequired()
-                        .HasMaxLength(30)
-                        .HasColumnType("nvarchar(30)")
-                        .HasColumnName("Statut");
+                    b.Property<Guid?>("StatutCertificatId")
+                        .HasColumnType("uniqueidentifier")
+                        .HasColumnName("StatutCertificatId");
 
                     b.Property<Guid?>("TypeId")
                         .HasColumnType("uniqueidentifier")
                         .HasColumnName("TypeId");
 
+                    b.Property<Guid?>("ZoneProductionId")
+                        .HasColumnType("uniqueidentifier")
+                        .HasColumnName("ZoneProductionId");
+
                     b.HasKey("Id");
 
                     b.HasIndex("AbonnementId");
 
+                    b.HasIndex("BureauDedouanementId");
+
+                    b.HasIndex("CarnetAdresseId");
+
                     b.HasIndex("CertificateNo")
                         .IsUnique()
-                        .HasDatabaseName("IX_certificates_CertificateNo");
+                        .HasDatabaseName("IX_Certificats_CertificateNo");
+
+                    b.HasIndex("DeviseId");
+
+                    b.HasIndex("ExportateurId");
+
+                    b.HasIndex("ModuleId");
+
+                    b.HasIndex("PartenaireId");
+
+                    b.HasIndex("PaysDestinationId");
+
+                    b.HasIndex("PortCongoId");
+
+                    b.HasIndex("PortSortieId");
+
+                    b.HasIndex("StatutCertificatId");
 
                     b.HasIndex("TypeId");
 
-                    b.ToTable("certificates", null, t =>
-                        {
-                            t.HasCheckConstraint("CK_certificates_Statut", "Statut IN ('Élaboré', 'Soumis', 'Contrôlé', 'Approuvé', 'Validé')");
-                        });
+                    b.HasIndex("ZoneProductionId");
+
+                    b.ToTable("Certificats", (string)null);
                 });
 
             modelBuilder.Entity("COService.Domain.Entities.CertificateLine", b =>
@@ -237,10 +472,18 @@ namespace COService.Infrastructure.Migrations
                         .HasColumnType("nvarchar(max)")
                         .HasColumnName("CreePar");
 
+                    b.Property<Guid?>("DeviseId")
+                        .HasColumnType("uniqueidentifier")
+                        .HasColumnName("DeviseId");
+
                     b.Property<string>("HSCode")
                         .HasMaxLength(50)
                         .HasColumnType("nvarchar(50)")
                         .HasColumnName("HSCode");
+
+                    b.Property<Guid?>("IncotermId")
+                        .HasColumnType("uniqueidentifier")
+                        .HasColumnName("IncotermId");
 
                     b.Property<string>("LineFOBValue")
                         .HasMaxLength(50)
@@ -285,11 +528,27 @@ namespace COService.Infrastructure.Migrations
                         .HasColumnType("datetime2(7)")
                         .HasColumnName("ModifierLe");
 
+                    b.Property<Guid?>("PositionTarifaireId")
+                        .HasColumnType("uniqueidentifier")
+                        .HasColumnName("PositionTarifaireId");
+
+                    b.Property<Guid?>("UniteStatistiqueId")
+                        .HasColumnType("uniqueidentifier")
+                        .HasColumnName("UniteStatistiqueId");
+
                     b.HasKey("Id");
 
                     b.HasIndex("CertificateId");
 
-                    b.ToTable("certificate_lines", (string)null);
+                    b.HasIndex("DeviseId");
+
+                    b.HasIndex("IncotermId");
+
+                    b.HasIndex("PositionTarifaireId");
+
+                    b.HasIndex("UniteStatistiqueId");
+
+                    b.ToTable("LignesCertificats", (string)null);
                 });
 
             modelBuilder.Entity("COService.Domain.Entities.CertificateType", b =>
@@ -331,9 +590,9 @@ namespace COService.Infrastructure.Migrations
 
                     b.HasIndex("Code")
                         .IsUnique()
-                        .HasDatabaseName("IX_certificate_types_code");
+                        .HasDatabaseName("IX_TypesCertificats_code");
 
-                    b.ToTable("certificate_types", (string)null);
+                    b.ToTable("TypesCertificats", (string)null);
                 });
 
             modelBuilder.Entity("COService.Domain.Entities.CertificateValidation", b =>
@@ -389,7 +648,63 @@ namespace COService.Infrastructure.Migrations
 
                     b.HasIndex("CertificateId");
 
-                    b.ToTable("certificate_validations", (string)null);
+                    b.ToTable("ValidationsCertificats", (string)null);
+                });
+
+            modelBuilder.Entity("COService.Domain.Entities.ChapitreTarifaire", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier")
+                        .HasColumnName("id");
+
+                    b.Property<bool>("Actif")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("bit")
+                        .HasDefaultValue(true)
+                        .HasColumnName("Actif");
+
+                    b.Property<string>("Code")
+                        .IsRequired()
+                        .HasMaxLength(10)
+                        .HasColumnType("nvarchar(10)")
+                        .HasColumnName("Code");
+
+                    b.Property<DateTime?>("CreeLe")
+                        .HasColumnType("datetime2(7)")
+                        .HasColumnName("CreeLe");
+
+                    b.Property<string>("CreePar")
+                        .HasColumnType("nvarchar(max)")
+                        .HasColumnName("CreePar");
+
+                    b.Property<string>("Description")
+                        .IsRequired()
+                        .HasMaxLength(255)
+                        .HasColumnType("nvarchar(255)")
+                        .HasColumnName("Description");
+
+                    b.Property<string>("ModifiePar")
+                        .HasColumnType("nvarchar(max)")
+                        .HasColumnName("ModifiePar");
+
+                    b.Property<DateTime?>("ModifierLe")
+                        .HasColumnType("datetime2(7)")
+                        .HasColumnName("ModifierLe");
+
+                    b.Property<Guid?>("SectionTarifaireId")
+                        .HasColumnType("uniqueidentifier")
+                        .HasColumnName("SectionTarifaireId");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("Code")
+                        .IsUnique()
+                        .HasDatabaseName("IX_ChapitresTariffaires_Code");
+
+                    b.HasIndex("SectionTarifaireId");
+
+                    b.ToTable("ChapitresTariffaires", (string)null);
                 });
 
             modelBuilder.Entity("COService.Domain.Entities.Commentaire", b =>
@@ -428,7 +743,1143 @@ namespace COService.Infrastructure.Migrations
 
                     b.HasIndex("CertificateId");
 
-                    b.ToTable("commentaires", (string)null);
+                    b.ToTable("Commentaires", (string)null);
+                });
+
+            modelBuilder.Entity("COService.Domain.Entities.Corridor", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier")
+                        .HasColumnName("id");
+
+                    b.Property<bool>("Actif")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("bit")
+                        .HasDefaultValue(true)
+                        .HasColumnName("Actif");
+
+                    b.Property<string>("Code")
+                        .IsRequired()
+                        .HasMaxLength(20)
+                        .HasColumnType("nvarchar(20)")
+                        .HasColumnName("Code");
+
+                    b.Property<DateTime?>("CreeLe")
+                        .HasColumnType("datetime2(7)")
+                        .HasColumnName("CreeLe");
+
+                    b.Property<string>("CreePar")
+                        .HasColumnType("nvarchar(max)")
+                        .HasColumnName("CreePar");
+
+                    b.Property<string>("ModifiePar")
+                        .HasColumnType("nvarchar(max)")
+                        .HasColumnName("ModifiePar");
+
+                    b.Property<DateTime?>("ModifierLe")
+                        .HasColumnType("datetime2(7)")
+                        .HasColumnName("ModifierLe");
+
+                    b.Property<string>("Nom")
+                        .IsRequired()
+                        .HasMaxLength(255)
+                        .HasColumnType("nvarchar(255)")
+                        .HasColumnName("Nom");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("Code")
+                        .IsUnique()
+                        .HasDatabaseName("IX_Corridors_Code");
+
+                    b.ToTable("Corridors", (string)null);
+                });
+
+            modelBuilder.Entity("COService.Domain.Entities.Departement", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier")
+                        .HasColumnName("id");
+
+                    b.Property<bool>("Actif")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("bit")
+                        .HasDefaultValue(true)
+                        .HasColumnName("Actif");
+
+                    b.Property<string>("Code")
+                        .IsRequired()
+                        .HasMaxLength(10)
+                        .HasColumnType("nvarchar(10)")
+                        .HasColumnName("Code");
+
+                    b.Property<DateTime?>("CreeLe")
+                        .HasColumnType("datetime2(7)")
+                        .HasColumnName("CreeLe");
+
+                    b.Property<string>("CreePar")
+                        .HasColumnType("nvarchar(max)")
+                        .HasColumnName("CreePar");
+
+                    b.Property<string>("ModifiePar")
+                        .HasColumnType("nvarchar(max)")
+                        .HasColumnName("ModifiePar");
+
+                    b.Property<DateTime?>("ModifierLe")
+                        .HasColumnType("datetime2(7)")
+                        .HasColumnName("ModifierLe");
+
+                    b.Property<string>("Nom")
+                        .IsRequired()
+                        .HasMaxLength(255)
+                        .HasColumnType("nvarchar(255)")
+                        .HasColumnName("Nom");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("Code")
+                        .IsUnique()
+                        .HasDatabaseName("IX_Departements_Code");
+
+                    b.ToTable("Departements", (string)null);
+                });
+
+            modelBuilder.Entity("COService.Domain.Entities.Devise", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier")
+                        .HasColumnName("id");
+
+                    b.Property<bool>("Actif")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("bit")
+                        .HasDefaultValue(true)
+                        .HasColumnName("Actif");
+
+                    b.Property<string>("Code")
+                        .IsRequired()
+                        .HasMaxLength(3)
+                        .HasColumnType("nvarchar(3)")
+                        .HasColumnName("Code");
+
+                    b.Property<DateTime?>("CreeLe")
+                        .HasColumnType("datetime2(7)")
+                        .HasColumnName("CreeLe");
+
+                    b.Property<string>("CreePar")
+                        .HasColumnType("nvarchar(max)")
+                        .HasColumnName("CreePar");
+
+                    b.Property<string>("ModifiePar")
+                        .HasColumnType("nvarchar(max)")
+                        .HasColumnName("ModifiePar");
+
+                    b.Property<DateTime?>("ModifierLe")
+                        .HasColumnType("datetime2(7)")
+                        .HasColumnName("ModifierLe");
+
+                    b.Property<string>("Nom")
+                        .IsRequired()
+                        .HasMaxLength(255)
+                        .HasColumnType("nvarchar(255)")
+                        .HasColumnName("Nom");
+
+                    b.Property<string>("Symbole")
+                        .HasMaxLength(10)
+                        .HasColumnType("nvarchar(10)")
+                        .HasColumnName("Symbole");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("Code")
+                        .IsUnique()
+                        .HasDatabaseName("IX_Devises_Code");
+
+                    b.ToTable("Devises", (string)null);
+                });
+
+            modelBuilder.Entity("COService.Domain.Entities.DivisionTarifaire", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier")
+                        .HasColumnName("id");
+
+                    b.Property<bool>("Actif")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("bit")
+                        .HasDefaultValue(true)
+                        .HasColumnName("Actif");
+
+                    b.Property<Guid?>("ChapitreId")
+                        .HasColumnType("uniqueidentifier")
+                        .HasColumnName("ChapitreId");
+
+                    b.Property<string>("Code")
+                        .IsRequired()
+                        .HasMaxLength(10)
+                        .HasColumnType("nvarchar(10)")
+                        .HasColumnName("Code");
+
+                    b.Property<DateTime?>("CreeLe")
+                        .HasColumnType("datetime2(7)")
+                        .HasColumnName("CreeLe");
+
+                    b.Property<string>("CreePar")
+                        .HasColumnType("nvarchar(max)")
+                        .HasColumnName("CreePar");
+
+                    b.Property<string>("Description")
+                        .IsRequired()
+                        .HasMaxLength(255)
+                        .HasColumnType("nvarchar(255)")
+                        .HasColumnName("Description");
+
+                    b.Property<string>("ModifiePar")
+                        .HasColumnType("nvarchar(max)")
+                        .HasColumnName("ModifiePar");
+
+                    b.Property<DateTime?>("ModifierLe")
+                        .HasColumnType("datetime2(7)")
+                        .HasColumnName("ModifierLe");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("ChapitreId");
+
+                    b.HasIndex("Code")
+                        .IsUnique()
+                        .HasDatabaseName("IX_DivisionsTariffaires_Code");
+
+                    b.ToTable("DivisionsTariffaires", (string)null);
+                });
+
+            modelBuilder.Entity("COService.Domain.Entities.Exportateur", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier")
+                        .HasColumnName("id");
+
+                    b.Property<bool>("Actif")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("bit")
+                        .HasDefaultValue(true)
+                        .HasColumnName("Actif");
+
+                    b.Property<string>("Adresse")
+                        .HasMaxLength(500)
+                        .HasColumnType("nvarchar(500)")
+                        .HasColumnName("Adresse");
+
+                    b.Property<string>("CodeActivite")
+                        .HasMaxLength(50)
+                        .HasColumnType("nvarchar(50)")
+                        .HasColumnName("CodeActivite");
+
+                    b.Property<string>("CodeExportateur")
+                        .IsRequired()
+                        .HasMaxLength(50)
+                        .HasColumnType("nvarchar(50)")
+                        .HasColumnName("CodeExportateur");
+
+                    b.Property<DateTime?>("CreeLe")
+                        .HasColumnType("datetime2(7)")
+                        .HasColumnName("CreeLe");
+
+                    b.Property<string>("CreePar")
+                        .HasColumnType("nvarchar(max)")
+                        .HasColumnName("CreePar");
+
+                    b.Property<Guid?>("DepartementId")
+                        .HasColumnType("uniqueidentifier")
+                        .HasColumnName("DepartementId");
+
+                    b.Property<DateTime?>("DerniereSynchronisation")
+                        .HasColumnType("datetime2(7)")
+                        .HasColumnName("DerniereSynchronisation");
+
+                    b.Property<string>("Email")
+                        .HasMaxLength(255)
+                        .HasColumnType("nvarchar(255)")
+                        .HasColumnName("Email");
+
+                    b.Property<string>("ModifiePar")
+                        .HasColumnType("nvarchar(max)")
+                        .HasColumnName("ModifiePar");
+
+                    b.Property<DateTime?>("ModifierLe")
+                        .HasColumnType("datetime2(7)")
+                        .HasColumnName("ModifierLe");
+
+                    b.Property<string>("NIU")
+                        .HasMaxLength(50)
+                        .HasColumnType("nvarchar(50)")
+                        .HasColumnName("NIU");
+
+                    b.Property<string>("Nom")
+                        .IsRequired()
+                        .HasMaxLength(255)
+                        .HasColumnType("nvarchar(255)")
+                        .HasColumnName("Nom");
+
+                    b.Property<Guid?>("PartenaireId")
+                        .HasColumnType("uniqueidentifier")
+                        .HasColumnName("PartenaireId");
+
+                    b.Property<string>("RCCM")
+                        .HasMaxLength(50)
+                        .HasColumnType("nvarchar(50)")
+                        .HasColumnName("RCCM");
+
+                    b.Property<string>("RaisonSociale")
+                        .HasMaxLength(255)
+                        .HasColumnType("nvarchar(255)")
+                        .HasColumnName("RaisonSociale");
+
+                    b.Property<string>("Telephone")
+                        .HasMaxLength(50)
+                        .HasColumnType("nvarchar(50)")
+                        .HasColumnName("Telephone");
+
+                    b.Property<int?>("TypeExportateur")
+                        .HasColumnType("int")
+                        .HasColumnName("TypeExportateur");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("CodeExportateur")
+                        .IsUnique()
+                        .HasDatabaseName("IX_Exportateurs_CodeExportateur");
+
+                    b.HasIndex("DepartementId");
+
+                    b.HasIndex("PartenaireId");
+
+                    b.ToTable("Exportateurs", (string)null);
+                });
+
+            modelBuilder.Entity("COService.Domain.Entities.Incoterm", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier")
+                        .HasColumnName("id");
+
+                    b.Property<bool>("Actif")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("bit")
+                        .HasDefaultValue(true)
+                        .HasColumnName("Actif");
+
+                    b.Property<string>("Code")
+                        .IsRequired()
+                        .HasMaxLength(10)
+                        .HasColumnType("nvarchar(10)")
+                        .HasColumnName("Code");
+
+                    b.Property<DateTime?>("CreeLe")
+                        .HasColumnType("datetime2(7)")
+                        .HasColumnName("CreeLe");
+
+                    b.Property<string>("CreePar")
+                        .HasColumnType("nvarchar(max)")
+                        .HasColumnName("CreePar");
+
+                    b.Property<string>("Description")
+                        .IsRequired()
+                        .HasMaxLength(255)
+                        .HasColumnType("nvarchar(255)")
+                        .HasColumnName("Description");
+
+                    b.Property<string>("ModifiePar")
+                        .HasColumnType("nvarchar(max)")
+                        .HasColumnName("ModifiePar");
+
+                    b.Property<DateTime?>("ModifierLe")
+                        .HasColumnType("datetime2(7)")
+                        .HasColumnName("ModifierLe");
+
+                    b.Property<Guid?>("ModuleId")
+                        .HasColumnType("uniqueidentifier")
+                        .HasColumnName("ModuleId");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("Code")
+                        .IsUnique()
+                        .HasDatabaseName("IX_Incoterms_Code");
+
+                    b.HasIndex("ModuleId");
+
+                    b.ToTable("Incoterms", (string)null);
+                });
+
+            modelBuilder.Entity("COService.Domain.Entities.Module", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier")
+                        .HasColumnName("id");
+
+                    b.Property<bool>("Actif")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("bit")
+                        .HasDefaultValue(true)
+                        .HasColumnName("Actif");
+
+                    b.Property<string>("Code")
+                        .IsRequired()
+                        .HasMaxLength(20)
+                        .HasColumnType("nvarchar(20)")
+                        .HasColumnName("Code");
+
+                    b.Property<DateTime?>("CreeLe")
+                        .HasColumnType("datetime2(7)")
+                        .HasColumnName("CreeLe");
+
+                    b.Property<string>("CreePar")
+                        .HasColumnType("nvarchar(max)")
+                        .HasColumnName("CreePar");
+
+                    b.Property<string>("Description")
+                        .HasMaxLength(500)
+                        .HasColumnType("nvarchar(500)")
+                        .HasColumnName("Description");
+
+                    b.Property<string>("ModifiePar")
+                        .HasColumnType("nvarchar(max)")
+                        .HasColumnName("ModifiePar");
+
+                    b.Property<DateTime?>("ModifierLe")
+                        .HasColumnType("datetime2(7)")
+                        .HasColumnName("ModifierLe");
+
+                    b.Property<string>("Nom")
+                        .IsRequired()
+                        .HasMaxLength(255)
+                        .HasColumnType("nvarchar(255)")
+                        .HasColumnName("Nom");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("Code")
+                        .IsUnique()
+                        .HasDatabaseName("IX_Modules_Code");
+
+                    b.ToTable("Modules", (string)null);
+                });
+
+            modelBuilder.Entity("COService.Domain.Entities.Partenaire", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier")
+                        .HasColumnName("id");
+
+                    b.Property<bool>("Actif")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("bit")
+                        .HasDefaultValue(true)
+                        .HasColumnName("Actif");
+
+                    b.Property<string>("Adresse")
+                        .HasMaxLength(500)
+                        .HasColumnType("nvarchar(500)")
+                        .HasColumnName("Adresse");
+
+                    b.Property<string>("CodePartenaire")
+                        .IsRequired()
+                        .HasMaxLength(50)
+                        .HasColumnType("nvarchar(50)")
+                        .HasColumnName("CodePartenaire");
+
+                    b.Property<DateTime?>("CreeLe")
+                        .HasColumnType("datetime2(7)")
+                        .HasColumnName("CreeLe");
+
+                    b.Property<string>("CreePar")
+                        .HasColumnType("nvarchar(max)")
+                        .HasColumnName("CreePar");
+
+                    b.Property<Guid?>("DepartementId")
+                        .HasColumnType("uniqueidentifier")
+                        .HasColumnName("DepartementId");
+
+                    b.Property<DateTime?>("DerniereSynchronisation")
+                        .HasColumnType("datetime2(7)")
+                        .HasColumnName("DerniereSynchronisation");
+
+                    b.Property<string>("Email")
+                        .HasMaxLength(255)
+                        .HasColumnType("nvarchar(255)")
+                        .HasColumnName("Email");
+
+                    b.Property<string>("ModifiePar")
+                        .HasColumnType("nvarchar(max)")
+                        .HasColumnName("ModifiePar");
+
+                    b.Property<DateTime?>("ModifierLe")
+                        .HasColumnType("datetime2(7)")
+                        .HasColumnName("ModifierLe");
+
+                    b.Property<string>("Nom")
+                        .IsRequired()
+                        .HasMaxLength(255)
+                        .HasColumnType("nvarchar(255)")
+                        .HasColumnName("Nom");
+
+                    b.Property<string>("Telephone")
+                        .HasMaxLength(50)
+                        .HasColumnType("nvarchar(50)")
+                        .HasColumnName("Telephone");
+
+                    b.Property<Guid?>("TypePartenaireId")
+                        .HasColumnType("uniqueidentifier")
+                        .HasColumnName("TypePartenaireId");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("CodePartenaire")
+                        .IsUnique()
+                        .HasDatabaseName("IX_Partenaires_CodePartenaire");
+
+                    b.HasIndex("DepartementId");
+
+                    b.HasIndex("TypePartenaireId");
+
+                    b.ToTable("Partenaires", (string)null);
+                });
+
+            modelBuilder.Entity("COService.Domain.Entities.Pays", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier")
+                        .HasColumnName("id");
+
+                    b.Property<bool>("Actif")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("bit")
+                        .HasDefaultValue(true)
+                        .HasColumnName("Actif");
+
+                    b.Property<string>("Code")
+                        .IsRequired()
+                        .HasMaxLength(3)
+                        .HasColumnType("nvarchar(3)")
+                        .HasColumnName("Code");
+
+                    b.Property<DateTime?>("CreeLe")
+                        .HasColumnType("datetime2(7)")
+                        .HasColumnName("CreeLe");
+
+                    b.Property<string>("CreePar")
+                        .HasColumnType("nvarchar(max)")
+                        .HasColumnName("CreePar");
+
+                    b.Property<string>("ModifiePar")
+                        .HasColumnType("nvarchar(max)")
+                        .HasColumnName("ModifiePar");
+
+                    b.Property<DateTime?>("ModifierLe")
+                        .HasColumnType("datetime2(7)")
+                        .HasColumnName("ModifierLe");
+
+                    b.Property<string>("Nom")
+                        .IsRequired()
+                        .HasMaxLength(255)
+                        .HasColumnType("nvarchar(255)")
+                        .HasColumnName("Nom");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("Code")
+                        .IsUnique()
+                        .HasDatabaseName("IX_Pays_Code");
+
+                    b.ToTable("Pays", (string)null);
+                });
+
+            modelBuilder.Entity("COService.Domain.Entities.Port", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier")
+                        .HasColumnName("id");
+
+                    b.Property<bool>("Actif")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("bit")
+                        .HasDefaultValue(true)
+                        .HasColumnName("Actif");
+
+                    b.Property<string>("Code")
+                        .IsRequired()
+                        .HasMaxLength(20)
+                        .HasColumnType("nvarchar(20)")
+                        .HasColumnName("Code");
+
+                    b.Property<DateTime?>("CreeLe")
+                        .HasColumnType("datetime2(7)")
+                        .HasColumnName("CreeLe");
+
+                    b.Property<string>("CreePar")
+                        .HasColumnType("nvarchar(max)")
+                        .HasColumnName("CreePar");
+
+                    b.Property<string>("ModifiePar")
+                        .HasColumnType("nvarchar(max)")
+                        .HasColumnName("ModifiePar");
+
+                    b.Property<DateTime?>("ModifierLe")
+                        .HasColumnType("datetime2(7)")
+                        .HasColumnName("ModifierLe");
+
+                    b.Property<string>("Nom")
+                        .IsRequired()
+                        .HasMaxLength(255)
+                        .HasColumnType("nvarchar(255)")
+                        .HasColumnName("Nom");
+
+                    b.Property<Guid?>("PaysId")
+                        .HasColumnType("uniqueidentifier")
+                        .HasColumnName("PaysId");
+
+                    b.Property<string>("Type")
+                        .HasMaxLength(20)
+                        .HasColumnType("nvarchar(20)")
+                        .HasColumnName("Type");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("Code")
+                        .IsUnique()
+                        .HasDatabaseName("IX_Ports_Code");
+
+                    b.HasIndex("PaysId");
+
+                    b.ToTable("Ports", (string)null);
+                });
+
+            modelBuilder.Entity("COService.Domain.Entities.PositionTarifaire", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier")
+                        .HasColumnName("id");
+
+                    b.Property<bool>("Actif")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("bit")
+                        .HasDefaultValue(true)
+                        .HasColumnName("Actif");
+
+                    b.Property<Guid?>("CategorieCodeId")
+                        .HasColumnType("uniqueidentifier")
+                        .HasColumnName("CategorieCodeId");
+
+                    b.Property<string>("Code")
+                        .IsRequired()
+                        .HasMaxLength(10)
+                        .HasColumnType("nvarchar(10)")
+                        .HasColumnName("Code");
+
+                    b.Property<DateTime?>("CreeLe")
+                        .HasColumnType("datetime2(7)")
+                        .HasColumnName("CreeLe");
+
+                    b.Property<string>("CreePar")
+                        .HasColumnType("nvarchar(max)")
+                        .HasColumnName("CreePar");
+
+                    b.Property<string>("Description")
+                        .IsRequired()
+                        .HasMaxLength(255)
+                        .HasColumnType("nvarchar(255)")
+                        .HasColumnName("Description");
+
+                    b.Property<string>("ModifiePar")
+                        .HasColumnType("nvarchar(max)")
+                        .HasColumnName("ModifiePar");
+
+                    b.Property<DateTime?>("ModifierLe")
+                        .HasColumnType("datetime2(7)")
+                        .HasColumnName("ModifierLe");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("CategorieCodeId");
+
+                    b.HasIndex("Code")
+                        .IsUnique()
+                        .HasDatabaseName("IX_PositionsTariffaires_Code");
+
+                    b.ToTable("PositionsTariffaires", (string)null);
+                });
+
+            modelBuilder.Entity("COService.Domain.Entities.RouteNationale", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier")
+                        .HasColumnName("id");
+
+                    b.Property<bool>("Actif")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("bit")
+                        .HasDefaultValue(true)
+                        .HasColumnName("Actif");
+
+                    b.Property<string>("Code")
+                        .IsRequired()
+                        .HasMaxLength(20)
+                        .HasColumnType("nvarchar(20)")
+                        .HasColumnName("Code");
+
+                    b.Property<DateTime?>("CreeLe")
+                        .HasColumnType("datetime2(7)")
+                        .HasColumnName("CreeLe");
+
+                    b.Property<string>("CreePar")
+                        .HasColumnType("nvarchar(max)")
+                        .HasColumnName("CreePar");
+
+                    b.Property<string>("ModifiePar")
+                        .HasColumnType("nvarchar(max)")
+                        .HasColumnName("ModifiePar");
+
+                    b.Property<DateTime?>("ModifierLe")
+                        .HasColumnType("datetime2(7)")
+                        .HasColumnName("ModifierLe");
+
+                    b.Property<string>("Nom")
+                        .IsRequired()
+                        .HasMaxLength(255)
+                        .HasColumnType("nvarchar(255)")
+                        .HasColumnName("Nom");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("Code")
+                        .IsUnique()
+                        .HasDatabaseName("IX_RoutesNationales_Code");
+
+                    b.ToTable("RoutesNationales", (string)null);
+                });
+
+            modelBuilder.Entity("COService.Domain.Entities.Section", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier")
+                        .HasColumnName("id");
+
+                    b.Property<bool>("Actif")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("bit")
+                        .HasDefaultValue(true)
+                        .HasColumnName("Actif");
+
+                    b.Property<string>("Code")
+                        .IsRequired()
+                        .HasMaxLength(20)
+                        .HasColumnType("nvarchar(20)")
+                        .HasColumnName("Code");
+
+                    b.Property<DateTime?>("CreeLe")
+                        .HasColumnType("datetime2(7)")
+                        .HasColumnName("CreeLe");
+
+                    b.Property<string>("CreePar")
+                        .HasColumnType("nvarchar(max)")
+                        .HasColumnName("CreePar");
+
+                    b.Property<string>("Description")
+                        .IsRequired()
+                        .HasMaxLength(255)
+                        .HasColumnType("nvarchar(255)")
+                        .HasColumnName("Description");
+
+                    b.Property<string>("ModifiePar")
+                        .HasColumnType("nvarchar(max)")
+                        .HasColumnName("ModifiePar");
+
+                    b.Property<DateTime?>("ModifierLe")
+                        .HasColumnType("datetime2(7)")
+                        .HasColumnName("ModifierLe");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("Code")
+                        .IsUnique()
+                        .HasDatabaseName("IX_Sections_Code");
+
+                    b.ToTable("Sections", (string)null);
+                });
+
+            modelBuilder.Entity("COService.Domain.Entities.SectionTarifaire", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier")
+                        .HasColumnName("id");
+
+                    b.Property<bool>("Actif")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("bit")
+                        .HasDefaultValue(true)
+                        .HasColumnName("Actif");
+
+                    b.Property<string>("Code")
+                        .IsRequired()
+                        .HasMaxLength(10)
+                        .HasColumnType("nvarchar(10)")
+                        .HasColumnName("Code");
+
+                    b.Property<DateTime?>("CreeLe")
+                        .HasColumnType("datetime2(7)")
+                        .HasColumnName("CreeLe");
+
+                    b.Property<string>("CreePar")
+                        .HasColumnType("nvarchar(max)")
+                        .HasColumnName("CreePar");
+
+                    b.Property<string>("Description")
+                        .IsRequired()
+                        .HasMaxLength(255)
+                        .HasColumnType("nvarchar(255)")
+                        .HasColumnName("Description");
+
+                    b.Property<string>("ModifiePar")
+                        .HasColumnType("nvarchar(max)")
+                        .HasColumnName("ModifiePar");
+
+                    b.Property<DateTime?>("ModifierLe")
+                        .HasColumnType("datetime2(7)")
+                        .HasColumnName("ModifierLe");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("Code")
+                        .IsUnique()
+                        .HasDatabaseName("IX_SectionsTariffaires_Code");
+
+                    b.ToTable("SectionsTariffaires", (string)null);
+                });
+
+            modelBuilder.Entity("COService.Domain.Entities.StatutCertificat", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier")
+                        .HasColumnName("id");
+
+                    b.Property<string>("Code")
+                        .IsRequired()
+                        .HasMaxLength(50)
+                        .HasColumnType("nvarchar(50)")
+                        .HasColumnName("Code");
+
+                    b.Property<DateTime?>("CreeLe")
+                        .HasColumnType("datetime2(7)")
+                        .HasColumnName("CreeLe");
+
+                    b.Property<string>("CreePar")
+                        .HasColumnType("nvarchar(max)")
+                        .HasColumnName("CreePar");
+
+                    b.Property<string>("ModifiePar")
+                        .HasColumnType("nvarchar(max)")
+                        .HasColumnName("ModifiePar");
+
+                    b.Property<DateTime?>("ModifierLe")
+                        .HasColumnType("datetime2(7)")
+                        .HasColumnName("ModifierLe");
+
+                    b.Property<string>("Nom")
+                        .IsRequired()
+                        .HasMaxLength(100)
+                        .HasColumnType("nvarchar(100)")
+                        .HasColumnName("Nom");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("Code")
+                        .IsUnique()
+                        .HasDatabaseName("IX_StatutsCertificats_Code");
+
+                    b.ToTable("StatutsCertificats", (string)null);
+                });
+
+            modelBuilder.Entity("COService.Domain.Entities.TauxDeChange", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier")
+                        .HasColumnName("id");
+
+                    b.Property<bool>("Actif")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("bit")
+                        .HasDefaultValue(true)
+                        .HasColumnName("Actif");
+
+                    b.Property<DateTime?>("CreeLe")
+                        .HasColumnType("datetime2(7)")
+                        .HasColumnName("CreeLe");
+
+                    b.Property<string>("CreePar")
+                        .HasColumnType("nvarchar(max)")
+                        .HasColumnName("CreePar");
+
+                    b.Property<Guid>("DeviseId")
+                        .HasColumnType("uniqueidentifier")
+                        .HasColumnName("DeviseId");
+
+                    b.Property<string>("ModifiePar")
+                        .HasColumnType("nvarchar(max)")
+                        .HasColumnName("ModifiePar");
+
+                    b.Property<DateTime?>("ModifierLe")
+                        .HasColumnType("datetime2(7)")
+                        .HasColumnName("ModifierLe");
+
+                    b.Property<string>("Source")
+                        .IsRequired()
+                        .HasMaxLength(100)
+                        .HasColumnType("nvarchar(100)")
+                        .HasColumnName("Source");
+
+                    b.Property<decimal>("Taux")
+                        .HasColumnType("decimal(20, 5)")
+                        .HasColumnName("Taux");
+
+                    b.Property<string>("ValideDe")
+                        .HasMaxLength(50)
+                        .HasColumnType("nvarchar(50)")
+                        .HasColumnName("ValideDe");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("DeviseId");
+
+                    b.ToTable("TauxDeChanges", (string)null);
+                });
+
+            modelBuilder.Entity("COService.Domain.Entities.Troncon", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier")
+                        .HasColumnName("id");
+
+                    b.Property<bool>("Actif")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("bit")
+                        .HasDefaultValue(true)
+                        .HasColumnName("Actif");
+
+                    b.Property<string>("Code")
+                        .IsRequired()
+                        .HasMaxLength(20)
+                        .HasColumnType("nvarchar(20)")
+                        .HasColumnName("Code");
+
+                    b.Property<Guid?>("CorridorId")
+                        .HasColumnType("uniqueidentifier")
+                        .HasColumnName("CorridorId");
+
+                    b.Property<DateTime?>("CreeLe")
+                        .HasColumnType("datetime2(7)")
+                        .HasColumnName("CreeLe");
+
+                    b.Property<string>("CreePar")
+                        .HasColumnType("nvarchar(max)")
+                        .HasColumnName("CreePar");
+
+                    b.Property<string>("Description")
+                        .IsRequired()
+                        .HasMaxLength(255)
+                        .HasColumnType("nvarchar(255)")
+                        .HasColumnName("Description");
+
+                    b.Property<string>("ModifiePar")
+                        .HasColumnType("nvarchar(max)")
+                        .HasColumnName("ModifiePar");
+
+                    b.Property<DateTime?>("ModifierLe")
+                        .HasColumnType("datetime2(7)")
+                        .HasColumnName("ModifierLe");
+
+                    b.Property<Guid?>("RouteId")
+                        .HasColumnType("uniqueidentifier")
+                        .HasColumnName("RouteId");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("Code")
+                        .IsUnique()
+                        .HasDatabaseName("IX_Troncons_Code");
+
+                    b.HasIndex("CorridorId");
+
+                    b.HasIndex("RouteId");
+
+                    b.ToTable("Troncons", (string)null);
+                });
+
+            modelBuilder.Entity("COService.Domain.Entities.TypePartenaire", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier")
+                        .HasColumnName("id");
+
+                    b.Property<bool>("Actif")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("bit")
+                        .HasDefaultValue(true)
+                        .HasColumnName("Actif");
+
+                    b.Property<string>("Code")
+                        .IsRequired()
+                        .HasMaxLength(50)
+                        .HasColumnType("nvarchar(50)")
+                        .HasColumnName("Code");
+
+                    b.Property<DateTime?>("CreeLe")
+                        .HasColumnType("datetime2(7)")
+                        .HasColumnName("CreeLe");
+
+                    b.Property<string>("CreePar")
+                        .HasColumnType("nvarchar(max)")
+                        .HasColumnName("CreePar");
+
+                    b.Property<string>("Description")
+                        .HasMaxLength(500)
+                        .HasColumnType("nvarchar(500)")
+                        .HasColumnName("Description");
+
+                    b.Property<string>("ModifiePar")
+                        .HasColumnType("nvarchar(max)")
+                        .HasColumnName("ModifiePar");
+
+                    b.Property<DateTime?>("ModifierLe")
+                        .HasColumnType("datetime2(7)")
+                        .HasColumnName("ModifierLe");
+
+                    b.Property<string>("Nom")
+                        .IsRequired()
+                        .HasMaxLength(255)
+                        .HasColumnType("nvarchar(255)")
+                        .HasColumnName("Nom");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("Code")
+                        .IsUnique()
+                        .HasDatabaseName("IX_TypesPartenaires_Code");
+
+                    b.ToTable("TypesPartenaires", (string)null);
+                });
+
+            modelBuilder.Entity("COService.Domain.Entities.UniteStatistique", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier")
+                        .HasColumnName("id");
+
+                    b.Property<bool>("Actif")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("bit")
+                        .HasDefaultValue(true)
+                        .HasColumnName("Actif");
+
+                    b.Property<string>("Code")
+                        .IsRequired()
+                        .HasMaxLength(20)
+                        .HasColumnType("nvarchar(20)")
+                        .HasColumnName("Code");
+
+                    b.Property<DateTime?>("CreeLe")
+                        .HasColumnType("datetime2(7)")
+                        .HasColumnName("CreeLe");
+
+                    b.Property<string>("CreePar")
+                        .HasColumnType("nvarchar(max)")
+                        .HasColumnName("CreePar");
+
+                    b.Property<string>("ModifiePar")
+                        .HasColumnType("nvarchar(max)")
+                        .HasColumnName("ModifiePar");
+
+                    b.Property<DateTime?>("ModifierLe")
+                        .HasColumnType("datetime2(7)")
+                        .HasColumnName("ModifierLe");
+
+                    b.Property<string>("Nom")
+                        .IsRequired()
+                        .HasMaxLength(255)
+                        .HasColumnType("nvarchar(255)")
+                        .HasColumnName("Nom");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("Code")
+                        .IsUnique()
+                        .HasDatabaseName("IX_UniteStatistiques_Code");
+
+                    b.ToTable("UniteStatistiques", (string)null);
+                });
+
+            modelBuilder.Entity("COService.Domain.Entities.ZoneProduction", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier")
+                        .HasColumnName("id");
+
+                    b.Property<DateTime?>("CreeLe")
+                        .HasColumnType("datetime2(7)")
+                        .HasColumnName("CreeLe");
+
+                    b.Property<string>("CreePar")
+                        .HasColumnType("nvarchar(max)")
+                        .HasColumnName("CreePar");
+
+                    b.Property<string>("Description")
+                        .HasMaxLength(500)
+                        .HasColumnType("nvarchar(500)")
+                        .HasColumnName("Description");
+
+                    b.Property<string>("ModifiePar")
+                        .HasColumnType("nvarchar(max)")
+                        .HasColumnName("ModifiePar");
+
+                    b.Property<DateTime?>("ModifierLe")
+                        .HasColumnType("datetime2(7)")
+                        .HasColumnName("ModifierLe");
+
+                    b.Property<string>("Nom")
+                        .IsRequired()
+                        .HasMaxLength(255)
+                        .HasColumnType("nvarchar(255)")
+                        .HasColumnName("Nom");
+
+                    b.Property<Guid>("PartenaireId")
+                        .HasColumnType("uniqueidentifier")
+                        .HasColumnName("PartenaireId");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("PartenaireId");
+
+                    b.ToTable("ZonesProductions", (string)null);
                 });
 
             modelBuilder.Entity("COService.Domain.Entities.Abonnement", b =>
@@ -441,6 +1892,26 @@ namespace COService.Infrastructure.Migrations
                     b.Navigation("Certificate");
                 });
 
+            modelBuilder.Entity("COService.Domain.Entities.Aeroport", b =>
+                {
+                    b.HasOne("COService.Domain.Entities.Pays", "Pays")
+                        .WithMany("Aeroports")
+                        .HasForeignKey("PaysId")
+                        .OnDelete(DeleteBehavior.SetNull);
+
+                    b.Navigation("Pays");
+                });
+
+            modelBuilder.Entity("COService.Domain.Entities.CategorieTarifaire", b =>
+                {
+                    b.HasOne("COService.Domain.Entities.DivisionTarifaire", "Division")
+                        .WithMany("CategoriesTariffaires")
+                        .HasForeignKey("DivisionId")
+                        .OnDelete(DeleteBehavior.SetNull);
+
+                    b.Navigation("Division");
+                });
+
             modelBuilder.Entity("COService.Domain.Entities.CertificatOrigine", b =>
                 {
                     b.HasOne("COService.Domain.Entities.Abonnement", "Abonnement")
@@ -448,14 +1919,91 @@ namespace COService.Infrastructure.Migrations
                         .HasForeignKey("AbonnementId")
                         .OnDelete(DeleteBehavior.SetNull);
 
+                    b.HasOne("COService.Domain.Entities.BureauDedouanement", "BureauDedouanement")
+                        .WithMany()
+                        .HasForeignKey("BureauDedouanementId")
+                        .OnDelete(DeleteBehavior.SetNull);
+
+                    b.HasOne("COService.Domain.Entities.CarnetAdresse", "CarnetAdresse")
+                        .WithMany("Certificats")
+                        .HasForeignKey("CarnetAdresseId")
+                        .OnDelete(DeleteBehavior.SetNull);
+
+                    b.HasOne("COService.Domain.Entities.Devise", "Devise")
+                        .WithMany()
+                        .HasForeignKey("DeviseId")
+                        .OnDelete(DeleteBehavior.SetNull);
+
+                    b.HasOne("COService.Domain.Entities.Exportateur", "Exportateur")
+                        .WithMany("Certificats")
+                        .HasForeignKey("ExportateurId")
+                        .OnDelete(DeleteBehavior.SetNull);
+
+                    b.HasOne("COService.Domain.Entities.Module", "Module")
+                        .WithMany()
+                        .HasForeignKey("ModuleId")
+                        .OnDelete(DeleteBehavior.SetNull);
+
+                    b.HasOne("COService.Domain.Entities.Partenaire", "Partenaire")
+                        .WithMany("Certificats")
+                        .HasForeignKey("PartenaireId")
+                        .OnDelete(DeleteBehavior.SetNull);
+
+                    b.HasOne("COService.Domain.Entities.Pays", "PaysDestination")
+                        .WithMany()
+                        .HasForeignKey("PaysDestinationId")
+                        .OnDelete(DeleteBehavior.SetNull);
+
+                    b.HasOne("COService.Domain.Entities.Port", "PortCongo")
+                        .WithMany()
+                        .HasForeignKey("PortCongoId")
+                        .OnDelete(DeleteBehavior.NoAction);
+
+                    b.HasOne("COService.Domain.Entities.Port", "PortSortie")
+                        .WithMany()
+                        .HasForeignKey("PortSortieId")
+                        .OnDelete(DeleteBehavior.NoAction);
+
+                    b.HasOne("COService.Domain.Entities.StatutCertificat", "StatutCertificat")
+                        .WithMany("Certificats")
+                        .HasForeignKey("StatutCertificatId")
+                        .OnDelete(DeleteBehavior.SetNull);
+
                     b.HasOne("COService.Domain.Entities.CertificateType", "Type")
                         .WithMany("Certificats")
                         .HasForeignKey("TypeId")
                         .OnDelete(DeleteBehavior.SetNull);
 
+                    b.HasOne("COService.Domain.Entities.ZoneProduction", "ZoneProduction")
+                        .WithMany("Certificats")
+                        .HasForeignKey("ZoneProductionId")
+                        .OnDelete(DeleteBehavior.SetNull);
+
                     b.Navigation("Abonnement");
 
+                    b.Navigation("BureauDedouanement");
+
+                    b.Navigation("CarnetAdresse");
+
+                    b.Navigation("Devise");
+
+                    b.Navigation("Exportateur");
+
+                    b.Navigation("Module");
+
+                    b.Navigation("Partenaire");
+
+                    b.Navigation("PaysDestination");
+
+                    b.Navigation("PortCongo");
+
+                    b.Navigation("PortSortie");
+
+                    b.Navigation("StatutCertificat");
+
                     b.Navigation("Type");
+
+                    b.Navigation("ZoneProduction");
                 });
 
             modelBuilder.Entity("COService.Domain.Entities.CertificateLine", b =>
@@ -466,7 +2014,35 @@ namespace COService.Infrastructure.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
+                    b.HasOne("COService.Domain.Entities.Devise", "Devise")
+                        .WithMany()
+                        .HasForeignKey("DeviseId")
+                        .OnDelete(DeleteBehavior.SetNull);
+
+                    b.HasOne("COService.Domain.Entities.Incoterm", "Incoterm")
+                        .WithMany()
+                        .HasForeignKey("IncotermId")
+                        .OnDelete(DeleteBehavior.SetNull);
+
+                    b.HasOne("COService.Domain.Entities.PositionTarifaire", "PositionTarifaire")
+                        .WithMany()
+                        .HasForeignKey("PositionTarifaireId")
+                        .OnDelete(DeleteBehavior.SetNull);
+
+                    b.HasOne("COService.Domain.Entities.UniteStatistique", "UniteStatistique")
+                        .WithMany()
+                        .HasForeignKey("UniteStatistiqueId")
+                        .OnDelete(DeleteBehavior.SetNull);
+
                     b.Navigation("CertificatOrigine");
+
+                    b.Navigation("Devise");
+
+                    b.Navigation("Incoterm");
+
+                    b.Navigation("PositionTarifaire");
+
+                    b.Navigation("UniteStatistique");
                 });
 
             modelBuilder.Entity("COService.Domain.Entities.CertificateValidation", b =>
@@ -480,6 +2056,16 @@ namespace COService.Infrastructure.Migrations
                     b.Navigation("CertificatOrigine");
                 });
 
+            modelBuilder.Entity("COService.Domain.Entities.ChapitreTarifaire", b =>
+                {
+                    b.HasOne("COService.Domain.Entities.SectionTarifaire", "SectionTarifaire")
+                        .WithMany("ChapitresTariffaires")
+                        .HasForeignKey("SectionTarifaireId")
+                        .OnDelete(DeleteBehavior.SetNull);
+
+                    b.Navigation("SectionTarifaire");
+                });
+
             modelBuilder.Entity("COService.Domain.Entities.Commentaire", b =>
                 {
                     b.HasOne("COService.Domain.Entities.CertificatOrigine", "CertificatOrigine")
@@ -491,9 +2077,132 @@ namespace COService.Infrastructure.Migrations
                     b.Navigation("CertificatOrigine");
                 });
 
+            modelBuilder.Entity("COService.Domain.Entities.DivisionTarifaire", b =>
+                {
+                    b.HasOne("COService.Domain.Entities.ChapitreTarifaire", "Chapitre")
+                        .WithMany("DivisionsTariffaires")
+                        .HasForeignKey("ChapitreId")
+                        .OnDelete(DeleteBehavior.SetNull);
+
+                    b.Navigation("Chapitre");
+                });
+
+            modelBuilder.Entity("COService.Domain.Entities.Exportateur", b =>
+                {
+                    b.HasOne("COService.Domain.Entities.Departement", "Departement")
+                        .WithMany("Exportateurs")
+                        .HasForeignKey("DepartementId")
+                        .OnDelete(DeleteBehavior.SetNull);
+
+                    b.HasOne("COService.Domain.Entities.Partenaire", "Partenaire")
+                        .WithMany("Exportateurs")
+                        .HasForeignKey("PartenaireId")
+                        .OnDelete(DeleteBehavior.SetNull);
+
+                    b.Navigation("Departement");
+
+                    b.Navigation("Partenaire");
+                });
+
+            modelBuilder.Entity("COService.Domain.Entities.Incoterm", b =>
+                {
+                    b.HasOne("COService.Domain.Entities.Module", "Module")
+                        .WithMany("Incoterms")
+                        .HasForeignKey("ModuleId")
+                        .OnDelete(DeleteBehavior.SetNull);
+
+                    b.Navigation("Module");
+                });
+
+            modelBuilder.Entity("COService.Domain.Entities.Partenaire", b =>
+                {
+                    b.HasOne("COService.Domain.Entities.Departement", "Departement")
+                        .WithMany("Partenaires")
+                        .HasForeignKey("DepartementId")
+                        .OnDelete(DeleteBehavior.SetNull);
+
+                    b.HasOne("COService.Domain.Entities.TypePartenaire", "TypePartenaire")
+                        .WithMany("Partenaires")
+                        .HasForeignKey("TypePartenaireId")
+                        .OnDelete(DeleteBehavior.SetNull);
+
+                    b.Navigation("Departement");
+
+                    b.Navigation("TypePartenaire");
+                });
+
+            modelBuilder.Entity("COService.Domain.Entities.Port", b =>
+                {
+                    b.HasOne("COService.Domain.Entities.Pays", "Pays")
+                        .WithMany("Ports")
+                        .HasForeignKey("PaysId")
+                        .OnDelete(DeleteBehavior.SetNull);
+
+                    b.Navigation("Pays");
+                });
+
+            modelBuilder.Entity("COService.Domain.Entities.PositionTarifaire", b =>
+                {
+                    b.HasOne("COService.Domain.Entities.CategorieTarifaire", "Categorie")
+                        .WithMany("PositionsTariffaires")
+                        .HasForeignKey("CategorieCodeId")
+                        .OnDelete(DeleteBehavior.SetNull);
+
+                    b.Navigation("Categorie");
+                });
+
+            modelBuilder.Entity("COService.Domain.Entities.TauxDeChange", b =>
+                {
+                    b.HasOne("COService.Domain.Entities.Devise", "Devise")
+                        .WithMany("TauxDeChanges")
+                        .HasForeignKey("DeviseId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Devise");
+                });
+
+            modelBuilder.Entity("COService.Domain.Entities.Troncon", b =>
+                {
+                    b.HasOne("COService.Domain.Entities.Corridor", "Corridor")
+                        .WithMany("Troncons")
+                        .HasForeignKey("CorridorId")
+                        .OnDelete(DeleteBehavior.SetNull);
+
+                    b.HasOne("COService.Domain.Entities.RouteNationale", "Route")
+                        .WithMany("Troncons")
+                        .HasForeignKey("RouteId")
+                        .OnDelete(DeleteBehavior.SetNull);
+
+                    b.Navigation("Corridor");
+
+                    b.Navigation("Route");
+                });
+
+            modelBuilder.Entity("COService.Domain.Entities.ZoneProduction", b =>
+                {
+                    b.HasOne("COService.Domain.Entities.Partenaire", "Partenaire")
+                        .WithMany("ZonesProductions")
+                        .HasForeignKey("PartenaireId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.Navigation("Partenaire");
+                });
+
             modelBuilder.Entity("COService.Domain.Entities.Abonnement", b =>
                 {
                     b.Navigation("Certificats");
+                });
+
+            modelBuilder.Entity("COService.Domain.Entities.CarnetAdresse", b =>
+                {
+                    b.Navigation("Certificats");
+                });
+
+            modelBuilder.Entity("COService.Domain.Entities.CategorieTarifaire", b =>
+                {
+                    b.Navigation("PositionsTariffaires");
                 });
 
             modelBuilder.Entity("COService.Domain.Entities.CertificatOrigine", b =>
@@ -506,6 +2215,84 @@ namespace COService.Infrastructure.Migrations
                 });
 
             modelBuilder.Entity("COService.Domain.Entities.CertificateType", b =>
+                {
+                    b.Navigation("Certificats");
+                });
+
+            modelBuilder.Entity("COService.Domain.Entities.ChapitreTarifaire", b =>
+                {
+                    b.Navigation("DivisionsTariffaires");
+                });
+
+            modelBuilder.Entity("COService.Domain.Entities.Corridor", b =>
+                {
+                    b.Navigation("Troncons");
+                });
+
+            modelBuilder.Entity("COService.Domain.Entities.Departement", b =>
+                {
+                    b.Navigation("Exportateurs");
+
+                    b.Navigation("Partenaires");
+                });
+
+            modelBuilder.Entity("COService.Domain.Entities.Devise", b =>
+                {
+                    b.Navigation("TauxDeChanges");
+                });
+
+            modelBuilder.Entity("COService.Domain.Entities.DivisionTarifaire", b =>
+                {
+                    b.Navigation("CategoriesTariffaires");
+                });
+
+            modelBuilder.Entity("COService.Domain.Entities.Exportateur", b =>
+                {
+                    b.Navigation("Certificats");
+                });
+
+            modelBuilder.Entity("COService.Domain.Entities.Module", b =>
+                {
+                    b.Navigation("Incoterms");
+                });
+
+            modelBuilder.Entity("COService.Domain.Entities.Partenaire", b =>
+                {
+                    b.Navigation("Certificats");
+
+                    b.Navigation("Exportateurs");
+
+                    b.Navigation("ZonesProductions");
+                });
+
+            modelBuilder.Entity("COService.Domain.Entities.Pays", b =>
+                {
+                    b.Navigation("Aeroports");
+
+                    b.Navigation("Ports");
+                });
+
+            modelBuilder.Entity("COService.Domain.Entities.RouteNationale", b =>
+                {
+                    b.Navigation("Troncons");
+                });
+
+            modelBuilder.Entity("COService.Domain.Entities.SectionTarifaire", b =>
+                {
+                    b.Navigation("ChapitresTariffaires");
+                });
+
+            modelBuilder.Entity("COService.Domain.Entities.StatutCertificat", b =>
+                {
+                    b.Navigation("Certificats");
+                });
+
+            modelBuilder.Entity("COService.Domain.Entities.TypePartenaire", b =>
+                {
+                    b.Navigation("Partenaires");
+                });
+
+            modelBuilder.Entity("COService.Domain.Entities.ZoneProduction", b =>
                 {
                     b.Navigation("Certificats");
                 });

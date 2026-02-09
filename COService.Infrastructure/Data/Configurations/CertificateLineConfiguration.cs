@@ -8,7 +8,7 @@ public class CertificateLineConfiguration : IEntityTypeConfiguration<Certificate
 {
     public void Configure(EntityTypeBuilder<CertificateLine> builder)
     {
-        builder.ToTable("certificate_lines");
+        builder.ToTable("LignesCertificats");
 
         builder.HasKey(cl => cl.Id);
 
@@ -19,6 +19,9 @@ public class CertificateLineConfiguration : IEntityTypeConfiguration<Certificate
         builder.Property(cl => cl.CertificateId)
             .HasColumnName("certificate_id")
             .IsRequired();
+
+        builder.Property(cl => cl.PositionTarifaireId)
+            .HasColumnName("PositionTarifaireId");
 
         builder.Property(cl => cl.HSCode)
             .HasColumnName("HSCode")
@@ -32,9 +35,18 @@ public class CertificateLineConfiguration : IEntityTypeConfiguration<Certificate
             .HasColumnName("LineQuantity")
             .HasMaxLength(50);
 
+        builder.Property(cl => cl.UniteStatistiqueId)
+            .HasColumnName("UniteStatistiqueId");
+
         builder.Property(cl => cl.LineUnits)
             .HasColumnName("LineUnits")
             .HasMaxLength(50);
+
+        builder.Property(cl => cl.DeviseId)
+            .HasColumnName("DeviseId");
+
+        builder.Property(cl => cl.IncotermId)
+            .HasColumnName("IncotermId");
 
         builder.Property(cl => cl.LineGrossWeight)
             .HasColumnName("LineGrossWeight")
@@ -68,6 +80,27 @@ public class CertificateLineConfiguration : IEntityTypeConfiguration<Certificate
         builder.Property(cl => cl.ModifiePar)
             .HasColumnName("ModifiePar")
             .HasColumnType("nvarchar(max)");
+
+        // Relations avec les référentiels
+        builder.HasOne(cl => cl.PositionTarifaire)
+            .WithMany()
+            .HasForeignKey(cl => cl.PositionTarifaireId)
+            .OnDelete(DeleteBehavior.SetNull);
+
+        builder.HasOne(cl => cl.UniteStatistique)
+            .WithMany()
+            .HasForeignKey(cl => cl.UniteStatistiqueId)
+            .OnDelete(DeleteBehavior.SetNull);
+
+        builder.HasOne(cl => cl.Devise)
+            .WithMany()
+            .HasForeignKey(cl => cl.DeviseId)
+            .OnDelete(DeleteBehavior.SetNull);
+
+        builder.HasOne(cl => cl.Incoterm)
+            .WithMany()
+            .HasForeignKey(cl => cl.IncotermId)
+            .OnDelete(DeleteBehavior.SetNull);
     }
 }
 

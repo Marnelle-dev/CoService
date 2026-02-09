@@ -16,7 +16,17 @@ public class CertificateLine
     public Guid CertificateId { get; set; }
 
     /// <summary>
-    /// Code HS
+    /// Référence à la position tarifaire (Code HS)
+    /// </summary>
+    public Guid? PositionTarifaireId { get; set; }
+
+    /// <summary>
+    /// Position tarifaire (Code HS)
+    /// </summary>
+    public PositionTarifaire? PositionTarifaire { get; set; }
+
+    /// <summary>
+    /// Code HS (conservé pour compatibilité, mais devrait utiliser PositionTarifaireId)
     /// </summary>
     public string? HSCode { get; set; }
 
@@ -31,7 +41,17 @@ public class CertificateLine
     public string? LineQuantity { get; set; }
 
     /// <summary>
-    /// Unité de mesure
+    /// Référence à l'unité statistique
+    /// </summary>
+    public Guid? UniteStatistiqueId { get; set; }
+
+    /// <summary>
+    /// Unité statistique
+    /// </summary>
+    public UniteStatistique? UniteStatistique { get; set; }
+
+    /// <summary>
+    /// Unité de mesure (conservé pour compatibilité, mais devrait utiliser UniteStatistiqueId)
     /// </summary>
     public string? LineUnits { get; set; }
 
@@ -49,6 +69,26 @@ public class CertificateLine
     /// Valeur FOB
     /// </summary>
     public string? LineFOBValue { get; set; }
+
+    /// <summary>
+    /// Référence à la devise
+    /// </summary>
+    public Guid? DeviseId { get; set; }
+
+    /// <summary>
+    /// Devise
+    /// </summary>
+    public Devise? Devise { get; set; }
+
+    /// <summary>
+    /// Référence à l'incoterm
+    /// </summary>
+    public Guid? IncotermId { get; set; }
+
+    /// <summary>
+    /// Incoterm
+    /// </summary>
+    public Incoterm? Incoterm { get; set; }
 
     /// <summary>
     /// Volume

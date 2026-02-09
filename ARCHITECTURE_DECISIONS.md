@@ -1,200 +1,209 @@
 # Décisions Architecturales - COService
 
-## 1. Concernant les Acteurs (Contrôleur, Superviseur, Signataire)
+## Outils et Technologies Utilisés
 
-### Question
-Les acteurs Contrôleur, Superviseur et Signataire sont-ils toujours nécessaires si le workflow de validation est géré par le microservice visaDossier ?
+### 1. RabbitMQ - Messaging Asynchrone
+**Rôle** : Gestion des messages et événements entre microservices
 
-### Décision
-**OUI, ces rôles doivent être conservés** dans le modèle de données et la logique du COService.
+**Impact sur COService** :
+- ✅ **Synchronisation événementielle** : Les mises à jour des organisations (Partenaires, Exportateurs) et référentiels seront reçues via RabbitMQ
+- ✅ **Notifications** : Les notifications seront envoyées via RabbitMQ vers le service de notifications
+- ✅ **Événements métier** : Les événements de changement de statut de certificat seront publiés via RabbitMQ
 
-### Justification
+**À retirer/modifier** :
+- ❌ Synchronisation périodique via HTTP (remplacée par événements RabbitMQ)
+- ❌ Appels HTTP directs pour les notifications (remplacés par messages RabbitMQ)
 
-#### 1.1 Traçabilité et Historique
-- Le COService doit enregistrer qui a validé à chaque étape
-- L'historique des validations doit être consultable
-- Les certificats doivent contenir les informations de validation
+**À implémenter** :
+- 📦 Client RabbitMQ pour publier/consommer des messages
+- 📦 Handlers d'événements pour les mises à jour d'organisations et référentiels
+- 📦 Publication d'événements lors des changements de statut de certificat
 
-#### 1.2 Notifications
-- Les notifications doivent être envoyées aux bons rôles à chaque étape
-- Chaque rôle doit recevoir des notifications spécifiques
-- Le COService orchestre les notifications même si visaDossier gère le workflow
+---
 
-#### 1.3 Affichage et UX
-- La barre de progression doit afficher les étapes par rôle
-- L'interface doit montrer qui a validé et quand
-- Les filtres peuvent être basés sur les rôles
+### 2. API Gateway avec Apache APISIX - Service Discovery
+**Rôle** : Point d'entrée unique et routage vers les microservices
 
-#### 1.4 Intégration avec visaDossier
-- **visaDossier** : Gère le workflow, les règles de validation, l'ordre des validations
-- **COService** : 
-  - Consulte visaDossier pour connaître le statut actuel
-  - Enregistre les validations avec le rôle du validateur
-  - Met à jour son état interne basé sur les statuts de visaDossier
-  - Orchestre les notifications et l'affichage
+**Impact sur COService** :
+- ✅ **Service Discovery** : APISIX gère la découverte de services via Consul, pas besoin de découverte côté client
+- ✅ **Routage** : Les appels entre microservices passent par l'API Gateway APISIX
+- ✅ **Authentification centralisée** : APISIX gère l'authentification (JWT, OAuth2, etc.)
+- ✅ **Rate Limiting** : APISIX peut gérer le rate limiting
+- ✅ **Load Balancing** : APISIX fournit le load balancing dynamique
+- ✅ **Logging et Monitoring** : APISIX fournit des logs et métriques
+- ✅ **Configuration dynamique** : APISIX utilise etcd pour la configuration en temps réel
 
-### Modèle de Données Proposé
+**À retirer/modifier** :
+- ❌ Découverte de service via Consul dans les clients HTTP (APISIX s'en charge)
+- ❌ Configuration de base URLs dynamiques via Consul (utilisation d'URLs statiques vers APISIX)
 
-```csharp
-// Dans StatutValidation
-public class StatutValidation
+**À conserver** :
+- ✅ Enregistrement du service dans Consul (pour qu'APISIX puisse le découvrir via le plugin Consul)
+- ✅ Health checks Consul (pour qu'APISIX vérifie la disponibilité)
+
+**À adapter** :
+- 📝 Les clients HTTP (Enrolement, Referentiel) doivent appeler APISIX, pas directement les services
+- 📝 Configuration des URLs des services externes doit pointer vers APISIX
+- 📝 APISIX utilise Consul pour la découverte de services (plugin consul-kv)
+
+---
+
+### 3. GitLab CI/CD - Déploiement Automatique
+**Rôle** : Pipeline de build, test et déploiement
+
+**Impact sur COService** :
+- ✅ **Build automatique** : Compilation et création des artefacts
+- ✅ **Tests automatiques** : Exécution des tests unitaires et d'intégration
+- ✅ **Déploiement** : Déploiement automatique vers les environnements (dev, staging, prod)
+- ✅ **Docker** : Build et push des images Docker
+
+**À préparer** :
+- 📝 Fichier `.gitlab-ci.yml` pour définir le pipeline
+- 📝 Configuration des variables d'environnement dans GitLab
+- 📝 Scripts de déploiement
+
+**À retirer** :
+- ❌ Scripts de déploiement manuels (remplacés par GitLab CI/CD)
+
+---
+
+## Architecture Adaptée
+
+### Communication Inter-Services
+
+#### Avant (avec Consul direct)
+```
+COService → Consul Discovery → EnrolementService
+COService → Consul Discovery → ReferentielService
+```
+
+#### Après (avec API Gateway)
+```
+COService → API Gateway (APISIX) → EnrolementService
+COService → API Gateway (APISIX) → ReferentielService
+```
+
+### Synchronisation des Données
+
+#### Avant (synchronisation périodique HTTP)
+```
+COService → HTTP Polling → EnrolementService (toutes les heures)
+COService → HTTP Polling → ReferentielService (toutes les heures)
+```
+
+#### Après (événements RabbitMQ)
+```
+EnrolementService → RabbitMQ Event → COService (en temps réel)
+ReferentielService → RabbitMQ Event → COService (en temps réel)
+```
+
+### Notifications
+
+#### Avant (appels HTTP directs)
+```
+COService → HTTP → NotificationService
+```
+
+#### Après (messages RabbitMQ)
+```
+COService → RabbitMQ Message → NotificationService
+```
+
+---
+
+## Modifications à Apporter au Code
+
+### 1. Clients HTTP (Enrolement, Referentiel)
+- ✅ **Modifier** : Utiliser l'URL de l'API Gateway au lieu de la découverte Consul
+- ✅ **Conserver** : La structure des clients Refit reste identique
+- ✅ **Configuration** : URL de l'API Gateway dans `appsettings.json`
+
+### 2. Service de Synchronisation
+- ✅ **Modifier** : Remplacer la synchronisation périodique par des handlers d'événements RabbitMQ
+- ✅ **Conserver** : Les méthodes de synchronisation peuvent être appelées manuellement via API
+- ✅ **Ajouter** : Handlers pour consommer les événements RabbitMQ
+
+### 3. Service de Notification
+- ✅ **Modifier** : Publier des messages RabbitMQ au lieu d'appels HTTP
+- ✅ **Ajouter** : Client RabbitMQ pour la publication de messages
+
+### 4. Consul
+- ✅ **Conserver** : Enregistrement du service et health checks
+- ❌ **Retirer** : Découverte de service côté client (gérée par APISIX via plugin consul-kv)
+
+---
+
+## Prochaines Étapes
+
+1. ✅ **Adapter les clients HTTP** : Utiliser Apache APISIX API Gateway
+2. ✅ **Intégrer RabbitMQ** : Client et handlers d'événements
+3. ✅ **Créer le pipeline GitLab CI/CD** : `.gitlab-ci.yml`
+4. ✅ **Documenter les événements RabbitMQ** : Format des messages
+5. ✅ **Adapter la configuration** : URLs API Gateway dans `appsettings.json`
+
+---
+
+## Événements RabbitMQ à Implémenter
+
+### Événements Consommés (Reçus)
+- `partenaire.creé` - Création d'un partenaire
+- `partenaire.modifié` - Modification d'un partenaire
+- `partenaire.supprimé` - Suppression d'un partenaire
+- `exportateur.creé` - Création d'un exportateur
+- `exportateur.modifié` - Modification d'un exportateur
+- `exportateur.supprimé` - Suppression d'un exportateur
+- `referentiel.pays.mis-a-jour` - Mise à jour des pays
+- `referentiel.port.mis-a-jour` - Mise à jour des ports
+- `referentiel.devise.mis-a-jour` - Mise à jour des devises
+- (etc. pour tous les référentiels)
+
+### Événements Publiés (Envoyés)
+- `certificat.statut.changé` - Changement de statut d'un certificat
+- `certificat.creé` - Création d'un certificat
+- `certificat.validé` - Validation d'un certificat
+- `certificat.rejeté` - Rejet d'un certificat
+- `notification.demande` - Demande de notification
+
+---
+
+## Configuration Recommandée
+
+### appsettings.json
+```json
 {
-    public Guid Id { get; set; }
-    public Guid DemandeCOId { get; set; }
-    public StatutDemande Statut { get; set; } // Contrôlé, Approuvé, Validé
-    public RoleUtilisateur RoleValidateur { get; set; } // Contrôleur, Superviseur, Signataire
-    public Guid ValidateurId { get; set; }
-    public DateTime DateValidation { get; set; }
-    public string? Commentaire { get; set; }
-    public int OrdreValidation { get; set; }
-    public Guid? DossierId { get; set; } // Référence au dossier dans visaDossier
+  "ApiGateway": {
+    "BaseUrl": "http://apisix:9080"
+  },
+  "RabbitMQ": {
+    "HostName": "rabbitmq",
+    "Port": 5672,
+    "UserName": "guest",
+    "Password": "guest",
+    "VirtualHost": "/",
+    "Exchange": "coservice"
+  },
+  "Consul": {
+    "Enabled": true,
+    "Address": "http://consul:8500",
+    "ServiceName": "coservice",
+    "ServiceId": "coservice-1",
+    "ServiceAddress": "http://coservice:8700",
+    "HealthCheck": {
+      "Endpoint": "/sante",
+      "Interval": 10,
+      "Timeout": 5
+    }
+  }
 }
 ```
 
-### Flux de Validation
-
-1. **Exportateur** crée une demande CO dans COService
-2. **COService** crée un dossier dans visaDossier
-3. **visaDossier** gère le workflow et notifie les validateurs
-4. **Contrôleur** valide dans visaDossier → visaDossier notifie COService
-5. **COService** enregistre la validation avec le rôle Contrôleur
-6. **COService** envoie une notification à l'exportateur
-7. Répéter pour Superviseur et Signataire
-8. **Signataire** valide → visaDossier notifie COService
-9. **COService** génère le certificat et le met à disposition
-
 ---
 
-## 2. Architecture Technique
+## Notes Importantes
 
-### 2.1 Clean Architecture
-- Séparation claire des responsabilités
-- Indépendance de la base de données
-- Testabilité accrue
-
-### 2.2 API Minimales (.NET 8)
-- Performance optimale
-- Code plus léger
-- Endpoints organisés par fonctionnalité
-
-### 2.3 Entity Framework Core
-- ORM standard pour .NET
-- Migrations automatiques
-- Support SQL Server natif
-
-### 2.4 Pattern Repository
-- Abstraction de l'accès aux données
-- Facilité de test
-- Possibilité de changer de source de données
-
----
-
-## 3. Intégration avec les Microservices
-
-### 3.1 Communication
-- **HTTP/REST** avec Refit pour les appels synchrones
-- **Retry Policies** avec Polly pour la résilience
-- **Circuit Breaker** pour éviter les cascades d'erreurs
-
-### 3.2 Authentification
-- **JWT** pour l'authentification
-- Vérification des rôles via Auth Service
-- Middleware d'authentification dans l'API
-
-### 3.3 Gestion des Erreurs
-- Exceptions personnalisées
-- Middleware de gestion d'erreurs global
-- Logs structurés avec Serilog
-
----
-
-## 4. Base de Données
-
-### 4.1 SQL Server
-- Base de données relationnelle
-- Support des transactions
-- Performance pour les requêtes complexes
-
-### 4.2 Migrations
-- Migrations EF Core pour versionner le schéma
-- Scripts de migration pour la production
-
-### 4.3 Index et Performance
-- Index sur les colonnes fréquemment interrogées
-- Clés uniques pour les numéros de demande et certificats
-
----
-
-## 5. Déploiement
-
-### 5.1 Docker
-- Containerisation pour la portabilité
-- Dockerfile multi-stage pour optimiser la taille
-
-### 5.2 Portainer
-- Orchestration via docker-compose
-- Gestion des variables d'environnement
-- Déploiement simplifié
-
-### 5.3 GitHub
-- Versionnement du code
-- CI/CD possible avec GitHub Actions
-- Documentation dans le dépôt
-
----
-
-## 6. Sécurité
-
-### 6.1 Authentification et Autorisation
-- Vérification des rôles via Auth Service
-- Validation des permissions avant chaque action
-- JWT pour l'authentification
-
-### 6.2 Validation des Données
-- FluentValidation pour valider les DTOs
-- Validation côté serveur obligatoire
-- Protection contre les injections SQL (EF Core)
-
-### 6.3 Logs et Audit
-- Logs de toutes les actions importantes
-- Historique des modifications
-- Traçabilité complète
-
----
-
-## 7. Performance
-
-### 7.1 Optimisations
-- Pagination pour les listes
-- Index sur les colonnes de recherche
-- Requêtes optimisées avec EF Core
-
-### 7.2 Cache (Futur)
-- Possibilité d'ajouter Redis pour le cache
-- Cache des rôles et permissions
-- Cache des configurations de workflow
-
----
-
-## 8. Monitoring et Observabilité
-
-### 8.1 Logging
-- Serilog pour les logs structurés
-- Niveaux de log appropriés
-- Logs centralisés (futur)
-
-### 8.2 Health Checks
-- Endpoint /health pour vérifier l'état
-- Vérification de la connexion à la base de données
-- Vérification des microservices externes
-
----
-
-## Questions Ouvertes
-
-1. **Format des certificats PDF** : Template à définir, bibliothèque à utiliser ?
-2. **CO-Exchange** : Communication synchrone ou asynchrone ? Message queue ?
-3. **Cache** : Redis nécessaire dès le début ou plus tard ?
-4. **Logs centralisés** : Solution à utiliser (ELK, Seq, etc.) ?
-5. **Monitoring** : Solution de monitoring (Prometheus, Application Insights, etc.) ?
-
+1. **APISIX gère le service discovery** : APISIX utilise le plugin consul-kv pour découvrir les services automatiquement
+2. **RabbitMQ pour la synchronisation** : Plus besoin de polling HTTP, les événements arrivent en temps réel
+3. **API Gateway comme point d'entrée** : Tous les appels HTTP passent par APISIX
+4. **Consul reste pour l'enregistrement** : Le service s'enregistre dans Consul pour qu'APISIX puisse le découvrir via le plugin consul-kv
+5. **APISIX Configuration** : Les routes et services sont configurés dans APISIX via etcd (configuration dynamique en temps réel)
+6. **etcd** : APISIX utilise etcd comme backend de configuration pour la gestion dynamique des routes

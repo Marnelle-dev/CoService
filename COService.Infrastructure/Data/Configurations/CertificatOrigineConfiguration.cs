@@ -1,6 +1,4 @@
-using System;
 using COService.Domain.Entities;
-using COService.Domain.Enums;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
@@ -10,7 +8,7 @@ public class CertificatOrigineConfiguration : IEntityTypeConfiguration<Certifica
 {
     public void Configure(EntityTypeBuilder<CertificatOrigine> builder)
     {
-        builder.ToTable("certificates");
+        builder.ToTable("Certificats");
 
         builder.HasKey(c => c.Id);
 
@@ -25,28 +23,34 @@ public class CertificatOrigineConfiguration : IEntityTypeConfiguration<Certifica
 
         builder.HasIndex(c => c.CertificateNo)
             .IsUnique()
-            .HasDatabaseName("IX_certificates_CertificateNo");
+            .HasDatabaseName("IX_Certificats_CertificateNo");
 
-        builder.Property(c => c.Exportateur)
-            .HasColumnName("Exportateur")
-            .HasMaxLength(200)
-            .IsRequired();
+        builder.Property(c => c.ExportateurId)
+            .HasColumnName("ExportateurId");
 
-        builder.Property(c => c.Partenaire)
-            .HasColumnName("Partenaire")
-            .HasMaxLength(200);
+        builder.Property(c => c.PartenaireId)
+            .HasColumnName("PartenaireId");
 
-        builder.Property(c => c.PaysDestination)
-            .HasColumnName("PaysDestination")
-            .HasMaxLength(200);
+        builder.Property(c => c.PaysDestinationId)
+            .HasColumnName("PaysDestinationId");
 
-        builder.Property(c => c.PortSortie)
-            .HasColumnName("PortSortie")
-            .HasMaxLength(200);
+        builder.Property(c => c.PortSortieId)
+            .HasColumnName("PortSortieId");
 
-        builder.Property(c => c.PortCongo)
-            .HasColumnName("PortCongo")
-            .HasMaxLength(200);
+        builder.Property(c => c.PortCongoId)
+            .HasColumnName("PortCongoId");
+
+        builder.Property(c => c.ZoneProductionId)
+            .HasColumnName("ZoneProductionId");
+
+        builder.Property(c => c.BureauDedouanementId)
+            .HasColumnName("BureauDedouanementId");
+
+        builder.Property(c => c.ModuleId)
+            .HasColumnName("ModuleId");
+
+        builder.Property(c => c.DeviseId)
+            .HasColumnName("DeviseId");
 
         builder.Property(c => c.TypeId)
             .HasColumnName("TypeId");
@@ -65,34 +69,15 @@ public class CertificatOrigineConfiguration : IEntityTypeConfiguration<Certifica
             .HasColumnName("Mandataire")
             .HasMaxLength(200);
 
-        builder.Property(c => c.Statut)
-            .HasColumnName("Statut")
-            .HasMaxLength(30)
-            .HasConversion(
-                v => ConvertStatutToString(v),
-                v => ConvertStringToStatut(v))
-            .IsRequired();
-
-        // CHECK constraint pour Statut (selon le dictionnaire de données)
-        builder.ToTable(t => t.HasCheckConstraint(
-            "CK_certificates_Statut",
-            "Statut IN ('Élaboré', 'Soumis', 'Contrôlé', 'Approuvé', 'Validé')"));
+        builder.Property(c => c.StatutCertificatId)
+            .HasColumnName("StatutCertificatId");
 
         builder.Property(c => c.Observation)
             .HasColumnName("Observation")
             .HasColumnType("nvarchar(max)");
 
-        builder.Property(c => c.ProductsRecipientName)
-            .HasColumnName("ProductsRecipientName")
-            .HasMaxLength(255);
-
-        builder.Property(c => c.ProductsRecipientAddress1)
-            .HasColumnName("ProductsRecipientAddress1")
-            .HasMaxLength(255);
-
-        builder.Property(c => c.ProductsRecipientAddress2)
-            .HasColumnName("ProductsRecipientAddress2")
-            .HasMaxLength(255);
+        builder.Property(c => c.CarnetAdresseId)
+            .HasColumnName("CarnetAdresseId");
 
         builder.Property(c => c.Navire)
             .HasColumnName("navire")
@@ -143,32 +128,66 @@ public class CertificatOrigineConfiguration : IEntityTypeConfiguration<Certifica
             .WithMany(a => a.Certificats)
             .HasForeignKey(c => c.AbonnementId)
             .OnDelete(DeleteBehavior.SetNull);
-    }
 
-    private static string ConvertStatutToString(StatutCertificat statut)
-    {
-        return statut switch
-        {
-            StatutCertificat.Elabore => "Élaboré",
-            StatutCertificat.Soumis => "Soumis",
-            StatutCertificat.Controle => "Contrôlé",
-            StatutCertificat.Approuve => "Approuvé",
-            StatutCertificat.Valide => "Validé",
-            _ => statut.ToString()
-        };
-    }
+        // Relations avec les référentiels
+        // Exportateur : relation bidirectionnelle (Exportateur.Certificats)
+        builder.HasOne(c => c.Exportateur)
+            .WithMany(e => e.Certificats)
+            .HasForeignKey(c => c.ExportateurId)
+            .OnDelete(DeleteBehavior.SetNull);
 
-    private static StatutCertificat ConvertStringToStatut(string statut)
-    {
-        return statut switch
-        {
-            "Élaboré" => StatutCertificat.Elabore,
-            "Soumis" => StatutCertificat.Soumis,
-            "Contrôlé" => StatutCertificat.Controle,
-            "Approuvé" => StatutCertificat.Approuve,
-            "Validé" => StatutCertificat.Valide,
-            _ => throw new ArgumentException($"Valeur de statut invalide : {statut}")
-        };
+        // Partenaire / Chambre de Commerce : relation bidirectionnelle (Partenaire.Certificats)
+        builder.HasOne(c => c.Partenaire)
+            .WithMany(p => p.Certificats)
+            .HasForeignKey(c => c.PartenaireId)
+            .OnDelete(DeleteBehavior.SetNull);
+
+        builder.HasOne(c => c.PaysDestination)
+            .WithMany()
+            .HasForeignKey(c => c.PaysDestinationId)
+            .OnDelete(DeleteBehavior.SetNull);
+
+        builder.HasOne(c => c.PortSortie)
+            .WithMany()
+            .HasForeignKey(c => c.PortSortieId)
+            .OnDelete(DeleteBehavior.NoAction);
+
+        builder.HasOne(c => c.PortCongo)
+            .WithMany()
+            .HasForeignKey(c => c.PortCongoId)
+            .OnDelete(DeleteBehavior.NoAction);
+
+        // Zone de production : relation bidirectionnelle (ZoneProduction.Certificats)
+        builder.HasOne(c => c.ZoneProduction)
+            .WithMany(zp => zp.Certificats)
+            .HasForeignKey(c => c.ZoneProductionId)
+            .OnDelete(DeleteBehavior.SetNull);
+
+        builder.HasOne(c => c.BureauDedouanement)
+            .WithMany()
+            .HasForeignKey(c => c.BureauDedouanementId)
+            .OnDelete(DeleteBehavior.SetNull);
+
+        builder.HasOne(c => c.Module)
+            .WithMany()
+            .HasForeignKey(c => c.ModuleId)
+            .OnDelete(DeleteBehavior.SetNull);
+
+        builder.HasOne(c => c.Devise)
+            .WithMany()
+            .HasForeignKey(c => c.DeviseId)
+            .OnDelete(DeleteBehavior.SetNull);
+
+        builder.HasOne(c => c.CarnetAdresse)
+            .WithMany(ca => ca.Certificats)
+            .HasForeignKey(c => c.CarnetAdresseId)
+            .OnDelete(DeleteBehavior.SetNull);
+
+        // Relation avec StatutCertificat
+        builder.HasOne(c => c.StatutCertificat)
+            .WithMany(s => s.Certificats)
+            .HasForeignKey(c => c.StatutCertificatId)
+            .OnDelete(DeleteBehavior.SetNull);
     }
 }
 

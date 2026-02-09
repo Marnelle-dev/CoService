@@ -15,11 +15,10 @@ public class CertificatOrigineDto
     public string? Type { get; set; }
     public string? Formule { get; set; }
     public string? Mandataire { get; set; }
-    public string Statut { get; set; } = string.Empty;
+    public Guid? StatutCertificatId { get; set; }
+    public string? StatutNom { get; set; }
     public string? Observation { get; set; }
-    public string? ProductsRecipientName { get; set; }
-    public string? ProductsRecipientAddress1 { get; set; }
-    public string? ProductsRecipientAddress2 { get; set; }
+    public Guid? CarnetAdresseId { get; set; }
     public string? Navire { get; set; }
     public Guid? DocumentsId { get; set; }
     public DateTime CreeLe { get; set; }
@@ -39,20 +38,22 @@ public class CertificatOrigineDto
 public class CreerCertificatOrigineDto
 {
     public string CertificateNo { get; set; } = string.Empty;
-    public string Exportateur { get; set; } = string.Empty;
-    public string? Partenaire { get; set; }
-    public string? PaysDestination { get; set; }
-    public string? PortSortie { get; set; }
-    public string? PortCongo { get; set; }
-    public string? Type { get; set; }
+    public Guid? ExportateurId { get; set; }
+    public Guid? PartenaireId { get; set; }
+    public Guid? PaysDestinationId { get; set; }
+    public Guid? PortSortieId { get; set; }
+    public Guid? PortCongoId { get; set; }
+    public Guid? TypeId { get; set; }
     public string? Formule { get; set; }
     public string? Mandataire { get; set; }
     public string? Observation { get; set; }
-    public string? ProductsRecipientName { get; set; }
-    public string? ProductsRecipientAddress1 { get; set; }
-    public string? ProductsRecipientAddress2 { get; set; }
+    public Guid? CarnetAdresseId { get; set; }
     public string? Navire { get; set; }
     public Guid? DocumentsId { get; set; }
+    public Guid? ZoneProductionId { get; set; }
+    public Guid? BureauDedouanementId { get; set; }
+    public Guid? ModuleId { get; set; }
+    public Guid? DeviseId { get; set; }
     public List<CreerCertificateLineDto> CertificateLines { get; set; } = new();
 }
 
@@ -61,19 +62,21 @@ public class CreerCertificatOrigineDto
 /// </summary>
 public class ModifierCertificatOrigineDto
 {
-    public string? Exportateur { get; set; }
-    public string? Partenaire { get; set; }
-    public string? PaysDestination { get; set; }
-    public string? PortSortie { get; set; }
-    public string? PortCongo { get; set; }
-    public string? Type { get; set; }
+    public Guid? ExportateurId { get; set; }
+    public Guid? PartenaireId { get; set; }
+    public Guid? PaysDestinationId { get; set; }
+    public Guid? PortSortieId { get; set; }
+    public Guid? PortCongoId { get; set; }
+    public Guid? TypeId { get; set; }
     public string? Formule { get; set; }
     public string? Mandataire { get; set; }
     public string? Observation { get; set; }
-    public string? ProductsRecipientName { get; set; }
-    public string? ProductsRecipientAddress1 { get; set; }
-    public string? ProductsRecipientAddress2 { get; set; }
+    public Guid? CarnetAdresseId { get; set; }
     public string? Navire { get; set; }
     public Guid? DocumentsId { get; set; }
+    public Guid? ZoneProductionId { get; set; }
+    public Guid? BureauDedouanementId { get; set; }
+    public Guid? ModuleId { get; set; }
+    public Guid? DeviseId { get; set; }
 }
 

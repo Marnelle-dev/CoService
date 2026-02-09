@@ -8,7 +8,7 @@ public class CertificateValidationConfiguration : IEntityTypeConfiguration<Certi
 {
     public void Configure(EntityTypeBuilder<CertificateValidation> builder)
     {
-        builder.ToTable("certificate_validations");
+        builder.ToTable("ValidationsCertificats");
 
         builder.HasKey(cv => cv.Id);
 
