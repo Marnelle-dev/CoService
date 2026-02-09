@@ -20,6 +20,14 @@ services:
       - Consul__HealthCheck__Endpoint=/sante
       - Consul__HealthCheck__Interval=10
       - Consul__HealthCheck__Timeout=5
+      - RabbitMQ__Enabled=${RABBITMQ_ENABLED:-true}
+      - RabbitMQ__HostName=${RABBITMQ_HOSTNAME:-192.168.2.119}
+      - RabbitMQ__Port=${RABBITMQ_PORT:-5672}
+      - RabbitMQ__UserName=${RABBITMQ_USERNAME:-sysadmin}
+      - RabbitMQ__Password=${RABBITMQ_PASSWORD:-MyS3cur3}
+      - RabbitMQ__VirtualHost=${RABBITMQ_VIRTUALHOST:-/}
+      - RabbitMQ__Exchange=${RABBITMQ_EXCHANGE:-coservice}
+      - ApiGateway__BaseUrl=${API_GATEWAY_BASE_URL:-http://localhost:9080}
     restart: unless-stopped
     networks:
       - coservice-network

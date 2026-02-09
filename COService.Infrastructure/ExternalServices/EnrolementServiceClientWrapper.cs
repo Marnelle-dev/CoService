@@ -20,17 +20,24 @@ public class EnrolementServiceClientWrapper : IEnrolementServiceClient
     {
         _logger = logger;
         
-        // Utiliser Apache APISIX API Gateway au lieu de la découverte de service directe
-        // APISIX gère le routage et la découverte de service via Consul
-        var apiGatewayUrl = configuration.GetValue<string>("ApiGateway:BaseUrl") 
-            ?? throw new InvalidOperationException("ApiGateway:BaseUrl non configuré");
+        // TODO: API Gateway (Apache APISIX) non opérationnel pour l'instant
+        // Pour l'instant, utiliser directement l'URL du service Enrolement
+        // Quand l'API Gateway sera opérationnel, décommenter la section ci-dessous
         
-        var enrolementConfig = configuration.GetSection("ExternalServices:EnrolementService");
-        var enrolementPath = enrolementConfig.GetValue<string>("Path") ?? "/api/enrolement";
-        var timeout = enrolementConfig.GetValue<int>("Timeout", 30);
+        // Option 1: Via API Gateway (quand opérationnel)
+        // var apiGatewayUrl = configuration.GetValue<string>("ApiGateway:BaseUrl") 
+        //     ?? "http://localhost:9080";
+        // var enrolementConfig = configuration.GetSection("ExternalServices:EnrolementService");
+        // var enrolementPath = enrolementConfig.GetValue<string>("Path") ?? "/api/enrolement";
+        // var baseAddress = $"{apiGatewayUrl.TrimEnd('/')}{enrolementPath}";
         
-        // APISIX route vers /api/enrolement/... (configuré dans APISIX via etcd)
-        var baseAddress = $"{apiGatewayUrl.TrimEnd('/')}{enrolementPath}";
+        // Option 2: Directement vers le service Enrolement (temporaire)
+        var enrolementServiceUrl = configuration.GetValue<string>("ExternalServices:EnrolementService:BaseUrl")
+            ?? "http://localhost:5000"; // URL directe du service Enrolement
+        var timeout = configuration.GetSection("ExternalServices:EnrolementService")
+            .GetValue<int>("Timeout", 30);
+        
+        var baseAddress = enrolementServiceUrl.TrimEnd('/');
         
         _client = RestService.For<IEnrolementServiceClient>(
             new HttpClient
@@ -39,7 +46,7 @@ public class EnrolementServiceClientWrapper : IEnrolementServiceClient
                 Timeout = TimeSpan.FromSeconds(timeout)
             });
 
-        _logger.LogInformation("Client Enrolement configuré via API Gateway: {BaseAddress}", baseAddress);
+        _logger.LogInformation("Client Enrolement configuré directement (API Gateway désactivé): {BaseAddress}", baseAddress);
     }
 
     public async Task<PartenaireDto> GetPartenaireAsync(Guid id, CancellationToken cancellationToken = default)
