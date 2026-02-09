@@ -2,7 +2,6 @@ version: '3.8'
 
 services:
   coservice:
-    image: coservice:latest
     container_name: coservice
     build:
       context: .
