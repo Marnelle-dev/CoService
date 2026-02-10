@@ -26,7 +26,9 @@ builder.Services.AddSwaggerGen();
 // Configuration Entity Framework Core
 builder.Services.AddDbContext<COServiceDbContext>(options =>
 {
+    // Utiliser la chaîne de connexion \"chaine\" (authentification Windows / compte AD)
     var connectionString = builder.Configuration.GetConnectionString("chaine");
+
     options.UseSqlServer(connectionString, sqlOptions =>
     {
         sqlOptions.EnableRetryOnFailure(
