@@ -26,7 +26,8 @@ builder.Services.AddSwaggerGen();
 // Configuration Entity Framework Core
 builder.Services.AddDbContext<COServiceDbContext>(options =>
 {
-    // Utiliser la chaîne de connexion \"chaine\" (authentification Windows / compte AD)
+    // Utiliser la chaîne de connexion "chaine" (authentification SQL avec User Id/Password)
+    // Cette chaîne fonctionne aussi bien en local qu'en Docker/Portainer
     var connectionString = builder.Configuration.GetConnectionString("chaine");
 
     options.UseSqlServer(connectionString, sqlOptions =>
