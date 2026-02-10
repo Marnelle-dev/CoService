@@ -2,6 +2,7 @@ using AutoMapper;
 using COService.Application.DTOs;
 using COService.Application.Repositories;
 using COService.Domain.Entities;
+using COService.Shared.Constants;
 
 namespace COService.Application.Services;
 
@@ -12,17 +13,20 @@ public class CertificatOrigineService : ICertificatOrigineService
 {
     private readonly ICertificatOrigineRepository _repository;
     private readonly ICertificateLineRepository _lineRepository;
+    private readonly IStatutCertificatRepository _statutRepository;
     private readonly IMapper _mapper;
     private readonly IUnitOfWork _unitOfWork;
 
     public CertificatOrigineService(
         ICertificatOrigineRepository repository,
         ICertificateLineRepository lineRepository,
+        IStatutCertificatRepository statutRepository,
         IMapper mapper,
         IUnitOfWork unitOfWork)
     {
         _repository = repository;
         _lineRepository = lineRepository;
+        _statutRepository = statutRepository;
         _mapper = mapper;
         _unitOfWork = unitOfWork;
     }
@@ -37,6 +41,15 @@ public class CertificatOrigineService : ICertificatOrigineService
 
         var certificat = _mapper.Map<CertificatOrigine>(dto);
         certificat.CreePar = utilisateur;
+
+        // Assigner le statut "Élaboré" par défaut lors de la création
+        var statutElabore = await _statutRepository.GetByCodeAsync(StatutsCertificats.Elabore, cancellationToken);
+        if (statutElabore == null)
+        {
+            throw new InvalidOperationException($"Le statut '{StatutsCertificats.Elabore}' est introuvable dans la base de données. Veuillez exécuter le script d'insertion des statuts.");
+        }
+        certificat.StatutCertificatId = statutElabore.Id;
+        certificat.StatutCertificat = statutElabore;
 
         // Créer les lignes si fournies
         if (dto.CertificateLines.Any())

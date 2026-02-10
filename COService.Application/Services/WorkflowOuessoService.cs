@@ -59,9 +59,11 @@ internal class WorkflowOuessoService : IWorkflowChambreService
         }
 
         // Vérifier que le certificat est au statut Élaboré
-        if (certificat.StatutCertificat?.Code != StatutsCertificats.Elabore)
+        var statutActuel = certificat.StatutCertificat?.Nom ?? "Non défini";
+        var codeStatutActuel = certificat.StatutCertificat?.Code ?? "NULL";
+        if (codeStatutActuel != StatutsCertificats.Elabore)
         {
-            throw new InvalidOperationException($"Le certificat doit être au statut 'Élaboré' pour être soumis. Statut actuel: {certificat.StatutCertificat?.Nom}");
+            throw new InvalidOperationException($"Le certificat doit être au statut 'Élaboré' pour être soumis. Statut actuel: {statutActuel} (Code: {codeStatutActuel})");
         }
 
         // Vérifier qu'il y a au moins une ligne dans le certificat
