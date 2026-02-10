@@ -64,6 +64,12 @@ internal class WorkflowOuessoService : IWorkflowChambreService
             throw new InvalidOperationException($"Le certificat doit être au statut 'Élaboré' pour être soumis. Statut actuel: {certificat.StatutCertificat?.Nom}");
         }
 
+        // Vérifier qu'il y a au moins une ligne dans le certificat
+        if (certificat.CertificateLines == null || !certificat.CertificateLines.Any())
+        {
+            throw new InvalidOperationException("Un certificat doit contenir au moins une ligne avant d'être soumis.");
+        }
+
         // Récupérer le statut "Soumis"
         var statutSoumis = await _statutRepository.GetByCodeAsync(StatutsCertificats.Soumis, cancellationToken)
             ?? throw new InvalidOperationException($"Statut '{StatutsCertificats.Soumis}' introuvable");
