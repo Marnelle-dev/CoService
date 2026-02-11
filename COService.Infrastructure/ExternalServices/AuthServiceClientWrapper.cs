@@ -10,7 +10,8 @@ namespace COService.Infrastructure.ExternalServices;
 public class AuthServiceClientWrapper : IAuthServiceClient
 {
     private readonly ILogger<AuthServiceClientWrapper> _logger;
-    private readonly IAuthServiceClient _client;
+    private readonly IAuthServiceClient? _client;
+    private readonly bool _bypassMode;
 
     public AuthServiceClientWrapper(
         ILogger<AuthServiceClientWrapper> logger,
@@ -18,11 +19,20 @@ public class AuthServiceClientWrapper : IAuthServiceClient
     {
         _logger = logger;
         
+        var authConfig = configuration.GetSection("ExternalServices:AuthService");
+        _bypassMode = authConfig.GetValue<bool>("BypassMode", false);
+        
+        if (_bypassMode)
+        {
+            _logger.LogWarning("⚠️ MODE BYPASS ACTIVÉ pour AuthService. L'authentification sera contournée pour les tests.");
+            _client = null;
+            return;
+        }
+        
         // Utiliser Apache APISIX API Gateway
         var apiGatewayUrl = configuration.GetValue<string>("ApiGateway:BaseUrl") 
             ?? throw new InvalidOperationException("ApiGateway:BaseUrl non configuré");
         
-        var authConfig = configuration.GetSection("ExternalServices:AuthService");
         var authPath = authConfig.GetValue<string>("Path") ?? "/api/auth";
         var timeout = authConfig.GetValue<int>("Timeout", 30);
         
@@ -40,9 +50,23 @@ public class AuthServiceClientWrapper : IAuthServiceClient
 
     public async Task<UserInfoDto> GetUserInfoAsync(string userId, CancellationToken cancellationToken = default)
     {
+        if (_bypassMode)
+        {
+            _logger.LogDebug("Mode bypass: retour d'informations utilisateur mock pour {UserId}", userId);
+            return new UserInfoDto
+            {
+                UserId = userId,
+                Username = $"user_{userId}",
+                Email = $"{userId}@example.com",
+                OrganisationId = Guid.Empty,
+                OrganisationCode = "",
+                Roles = new List<string> { "3", "4", "6" } // Tous les rôles pour les tests
+            };
+        }
+
         try
         {
-            return await _client.GetUserInfoAsync(userId, cancellationToken);
+            return await _client!.GetUserInfoAsync(userId, cancellationToken);
         }
         catch (Exception ex)
         {
@@ -53,9 +77,15 @@ public class AuthServiceClientWrapper : IAuthServiceClient
 
     public async Task<bool> VerifierRoleAsync(string userId, string role, CancellationToken cancellationToken = default)
     {
+        if (_bypassMode)
+        {
+            _logger.LogDebug("Mode bypass: vérification de rôle toujours vraie pour {UserId}, rôle {Role}", userId, role);
+            return true;
+        }
+
         try
         {
-            return await _client.VerifierRoleAsync(userId, role, cancellationToken);
+            return await _client!.VerifierRoleAsync(userId, role, cancellationToken);
         }
         catch (Exception ex)
         {
@@ -66,9 +96,16 @@ public class AuthServiceClientWrapper : IAuthServiceClient
 
     public async Task<List<string>> GetRolesAsync(string userId, CancellationToken cancellationToken = default)
     {
+        if (_bypassMode)
+        {
+            _logger.LogDebug("Mode bypass: retour de tous les rôles pour {UserId}", userId);
+            // Retourner tous les rôles nécessaires pour les tests
+            return new List<string> { "3", "4", "6" }; // Contrôleur, Superviseur, Président
+        }
+
         try
         {
-            return await _client.GetRolesAsync(userId, cancellationToken);
+            return await _client!.GetRolesAsync(userId, cancellationToken);
         }
         catch (Exception ex)
         {
@@ -79,9 +116,15 @@ public class AuthServiceClientWrapper : IAuthServiceClient
 
     public async Task<bool> VerifierMotDePasseAsync(string userId, VerifyPasswordRequest request, CancellationToken cancellationToken = default)
     {
+        if (_bypassMode)
+        {
+            _logger.LogDebug("Mode bypass: vérification de mot de passe toujours vraie pour {UserId}", userId);
+            return true;
+        }
+
         try
         {
-            return await _client.VerifierMotDePasseAsync(userId, request, cancellationToken);
+            return await _client!.VerifierMotDePasseAsync(userId, request, cancellationToken);
         }
         catch (Exception ex)
         {
@@ -92,9 +135,15 @@ public class AuthServiceClientWrapper : IAuthServiceClient
 
     public async Task<bool> VerifierOrganisationAsync(string userId, Guid organisationId, CancellationToken cancellationToken = default)
     {
+        if (_bypassMode)
+        {
+            _logger.LogDebug("Mode bypass: vérification d'organisation toujours vraie pour {UserId}, organisation {OrganisationId}", userId, organisationId);
+            return true;
+        }
+
         try
         {
-            return await _client.VerifierOrganisationAsync(userId, organisationId, cancellationToken);
+            return await _client!.VerifierOrganisationAsync(userId, organisationId, cancellationToken);
         }
         catch (Exception ex)
         {
