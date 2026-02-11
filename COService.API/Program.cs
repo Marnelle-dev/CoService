@@ -118,6 +118,7 @@ builder.Services.AddScoped<IIncotermRepository, IncotermRepository>();
 builder.Services.AddScoped<IBureauDedouanementRepository, BureauDedouanementRepository>();
 builder.Services.AddScoped<IUniteStatistiqueRepository, UniteStatistiqueRepository>();
 builder.Services.AddScoped<IDepartementRepository, DepartementRepository>();
+builder.Services.AddScoped<IZoneProductionRepository, ZoneProductionRepository>();
 builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
 
 // Services Application
