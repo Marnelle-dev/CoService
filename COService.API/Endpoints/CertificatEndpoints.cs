@@ -119,13 +119,24 @@ public static class CertificatEndpoints
             }
             catch (InvalidOperationException ex)
             {
-                return Results.Conflict(new { message = ex.Message });
+                // Si le message contient "existe déjà", c'est un conflit (409)
+                // Sinon, c'est une erreur de validation (400)
+                if (ex.Message.Contains("existe déjà"))
+                {
+                    return Results.Conflict(new { message = ex.Message });
+                }
+                return Results.BadRequest(new { message = ex.Message });
+            }
+            catch (KeyNotFoundException ex)
+            {
+                return Results.NotFound(new { message = ex.Message });
             }
         })
         .WithName("CreerCertificat")
         .WithSummary("Crée un nouveau certificat d'origine")
         .Accepts<CreerCertificatOrigineDto>("application/json")
         .Produces<CertificatOrigineDto>(StatusCodes.Status201Created)
+        .Produces(StatusCodes.Status400BadRequest)
         .Produces(StatusCodes.Status409Conflict);
 
         // PUT /api/certificats/{id} - Modifie un certificat
