@@ -51,14 +51,25 @@ public class CertificateEventPublisher : ICertificateEventPublisher
     {
         try
         {
-            await _rabbitMQClient.PublishAsync("certificat.validé", evt, cancellationToken);
+            // Clé principale (sans accents) pour faciliter l'interopérabilité.
+            await _rabbitMQClient.PublishAsync("co.valide", new EvenementCOValide
+            {
+                IdentifiantCO = evt.CertificatId,
+                NumeroCO = evt.CertificateNo,
+                IdentifiantExportateur = evt.ExportateurId,
+                IdentifiantPartenaire = evt.PartenaireId,
+                DateValidationUtc = evt.Timestamp.ToUniversalTime()
+            }, cancellationToken);
+
+            // Clé historique conservée pour compatibilité (si d'autres consommateurs existent déjà).
+            await _rabbitMQClient.PublishAsync("certificat.valide", evt, cancellationToken);
             _logger.LogInformation(
-                "Événement 'certificat.validé' publié pour le certificat {CertificatId} ({CertificateNo}) - FacturationService sera notifié",
+                "Événement 'co.valide' publié pour le certificat {CertificatId} ({CertificateNo})",
                 evt.CertificatId, evt.CertificateNo);
         }
         catch (Exception ex)
         {
-            _logger.LogError(ex, "Erreur lors de la publication de l'événement 'certificat.validé' pour {CertificatId}", evt.CertificatId);
+            _logger.LogError(ex, "Erreur lors de la publication de l'événement 'co.valide' pour {CertificatId}", evt.CertificatId);
         }
     }
 

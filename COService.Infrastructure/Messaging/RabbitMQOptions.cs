@@ -12,10 +12,10 @@ public class RabbitMQOptions
     /// </summary>
     public bool Enabled { get; set; } = true;
 
-    public string HostName { get; set; } = "localhost";
+    public string HostName { get; set; } = "192.168.2.119";
     public int Port { get; set; } = 5672;
-    public string UserName { get; set; } = "guest";
-    public string Password { get; set; } = "guest";
-    public string VirtualHost { get; set; } = "/";
-    public string Exchange { get; set; } = "coservice";
+    public string UserName { get; set; } = "sysguot";
+    public string Password { get; set; } = "MyS3cur3Passwor_d";
+    public string VirtualHost { get; set; } = "seg-co";
+    public string Exchange { get; set; } = "evenements.co";
 }

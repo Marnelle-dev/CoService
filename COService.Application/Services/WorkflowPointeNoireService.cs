@@ -162,7 +162,11 @@ internal class WorkflowPointeNoireService : IWorkflowChambreService
         // Vérifier que le certificat est au statut Contrôlé
         if (certificat.StatutCertificat?.Code != StatutsCertificats.Controle)
         {
-            throw new InvalidOperationException($"Le certificat doit être au statut 'Contrôlé' pour être approuvé. Statut actuel: {certificat.StatutCertificat?.Nom}");
+            var statutActuel = certificat.StatutCertificat != null 
+                ? $"{certificat.StatutCertificat.Nom} (Code: {certificat.StatutCertificat.Code})" 
+                : "Aucun statut";
+            _logger.LogWarning("Tentative d'approbation du certificat {CertificatId} avec un statut invalide. Statut actuel: {StatutActuel}", certificatId, statutActuel);
+            throw new InvalidOperationException($"Le certificat doit être au statut 'Contrôlé' (Code: {StatutsCertificats.Controle}) pour être approuvé. Statut actuel: {statutActuel}");
         }
 
         // Vérifier le rôle (Contrôleur ou Superviseur - rôles 3 ou 4)
@@ -207,6 +211,8 @@ internal class WorkflowPointeNoireService : IWorkflowChambreService
     {
         var certificat = await _certificatRepository.GetByIdAsync(certificatId, cancellationToken)
             ?? throw new KeyNotFoundException($"Certificat {certificatId} introuvable");
+
+        var ancienStatut = certificat.StatutCertificat?.Code ?? string.Empty;
 
         // Vérifier que le certificat est au statut Approuvé
         if (certificat.StatutCertificat?.Code != StatutsCertificats.Approuve)
@@ -259,7 +265,6 @@ internal class WorkflowPointeNoireService : IWorkflowChambreService
         _logger.LogInformation("Certificat {CertificatId} validé définitivement par le Président {UserId}", certificatId, userId);
 
         // Publier l'événement pour la facturation
-        var ancienStatut = certificat.StatutCertificat?.Code ?? string.Empty;
         await _eventPublisher.PublishCertificatStatutChangeAsync(new CertificatStatutChangeEvent
         {
             CertificatId = certificatId,

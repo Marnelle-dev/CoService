@@ -23,10 +23,10 @@ services:
       - RabbitMQ__Enabled=${RABBITMQ_ENABLED:-true}
       - RabbitMQ__HostName=${RABBITMQ_HOSTNAME:-192.168.2.119}
       - RabbitMQ__Port=${RABBITMQ_PORT:-5672}
-      - RabbitMQ__UserName=${RABBITMQ_USERNAME:-sysadmin}
-      - RabbitMQ__Password=${RABBITMQ_PASSWORD:-MyS3cur3}
+      - RabbitMQ__UserName=${RABBITMQ_USERNAME:-sysguot}
+      - RabbitMQ__Password=${RABBITMQ_PASSWORD:-MyS3cur3Passwor_d}
       - RabbitMQ__VirtualHost=${RABBITMQ_VIRTUALHOST:-/}
-      - RabbitMQ__Exchange=${RABBITMQ_EXCHANGE:-coservice}
+      - RabbitMQ__Exchange=${RABBITMQ_EXCHANGE:-evenements.co}
       - ApiGateway__BaseUrl=${API_GATEWAY_BASE_URL:-http://localhost:9080}
     restart: unless-stopped
     networks:
